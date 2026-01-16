@@ -1,0 +1,7 @@
+com/myapp/util/SessionManager.class
+com/myapp/util/DBConnection.class
+com/myapp/model/User.class
+com/myapp/controller/LoginController.class
+com/myapp/dao/UserDAO.class
+com/myapp/service/AuthService.class
+com/myapp/Main.class
