@@ -1,3 +1,13 @@
+/* Icon con mắt */
+.eye-icon {
+    -fx-cursor: hand;
+    -fx-opacity: 0.85;
+}
+
+.eye-icon:hover {
+    -fx-opacity: 1;
+}
+
 /* TextField & PasswordField */
 .text-input {
     -fx-background-color: transparent;
@@ -14,26 +24,7 @@
     -fx-background-radius: 20;
 }
 
-.btnLogin:hover {
+.btn-login:hover {
     -fx-background-color: #ffa733;
     -fx-background-radius: 20;
-}
-
-/* Hyperlink mặc định */
-.linkForgotPassword{
-    -fx-text-fill: #8b949e;
-    -fx-font-size: 13px;
-}
-.linkRegister{
-    -fx-text-fill: #8b949e;
-    -fx-font-size: 13px;
-}
-/* Khi hover */
-.linkRegister:hover {
-    -fx-text-fill: #FF8C00;
-    -fx-cursor: hand;
-}
-.linkForgotPassword:hover {
-    -fx-text-fill: #FF8C00;
-    -fx-cursor: hand;
 }
