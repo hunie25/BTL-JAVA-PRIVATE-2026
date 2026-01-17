@@ -1,12 +1,12 @@
 package com.myapp.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
 
 public class LoginController {
 
@@ -20,85 +20,77 @@ public class LoginController {
     private TextField tfPassword;
 
     @FXML
-    private ImageView iconEye;
+    private Label lblError;
 
-    private boolean isPasswordVisible = false;
+    private boolean isShowPassword = false;
 
-    // ================== TOGGLE PASSWORD ==================
     @FXML
     private void togglePassword() {
-        if (isPasswordVisible) {
-            // Ẩn mật khẩu
+
+        if (isShowPassword) {
             pfPassword.setText(tfPassword.getText());
             pfPassword.setVisible(true);
             pfPassword.setManaged(true);
 
             tfPassword.setVisible(false);
             tfPassword.setManaged(false);
-
-            iconEye.setImage(new Image(
-                    getClass().getResourceAsStream("/images/eye.png")
-            ));
         } else {
-            // Hiện mật khẩu
             tfPassword.setText(pfPassword.getText());
             tfPassword.setVisible(true);
             tfPassword.setManaged(true);
 
             pfPassword.setVisible(false);
             pfPassword.setManaged(false);
-
-            iconEye.setImage(new Image(
-                    getClass().getResourceAsStream("/images/eyeOff.png")
-            ));
         }
 
-        isPasswordVisible = !isPasswordVisible;
-    }
-    @FXML
-    private ImageView eye;
-
-    @FXML
-    public void initialize() {
-        iconEye.setCursor(Cursor.HAND);
+        isShowPassword = !isShowPassword;
     }
 
-    @FXML
-    private Button btnLogin;
-
-    @FXML
-    private void hoverLogin() {
-        btnLogin.setStyle("-fx-background-color: #ffa733;");
-    }
-
-    @FXML
-    private void exitLogin() {
-        btnLogin.setStyle("-fx-background-color: #ff8c00;");
-    }
-
-
-    // ================== LOGIN ==================
     @FXML
     private void handleLogin() {
-        String username = txtUsername.getText();
-        String password = isPasswordVisible
+        String username = txtUsername.getText().trim();
+        String password = isShowPassword
                 ? tfPassword.getText()
                 : pfPassword.getText();
 
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
+        if (username.isEmpty() || password.isEmpty()) {
+            showError("Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
 
-        // TODO: xử lý đăng nhập DB
-    }
-
-
-    @FXML
-    private void handleRegister() {
-        System.out.println("Register clicked");
+        if (username.equals("admin") && password.equals("123456")) {
+            lblError.setVisible(false);
+            System.out.println("Đăng nhập thành công!");
+        } else {
+            showError("Sai tài khoản hoặc mật khẩu");
+        }
     }
 
     @FXML
     private void handleForgotPassword() {
-        System.out.println("Forgot password clicked");
+        System.out.println("Đi tới màn hình quên mật khẩu");
+        // TODO: load forgot_password.fxml
+    }
+
+    @FXML
+    private void goToRegister(javafx.event.ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource())
+                    .getScene().getWindow();
+
+            Scene scene = new Scene(
+                    FXMLLoader.load(getClass()
+                            .getResource("/view/register.fxml"))
+            );
+
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String message) {
+        lblError.setText(message);
+        lblError.setVisible(true);
     }
 }

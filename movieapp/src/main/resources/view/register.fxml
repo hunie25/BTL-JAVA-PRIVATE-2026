@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefWidth="335" prefHeight="600"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.myapp.controller.RegisterController"
+            stylesheets="@../css/style.css"
+            style="-fx-background-color: #0D1117;">
+
+    <children>
+
+        <Label text="ĐĂNG KÝ"
+               layoutX="120"
+               layoutY="60"
+               style="-fx-text-fill: darkorange;">
+            <font>
+                <Font size="24"/>
+            </font>
+        </Label>
+
+        <VBox layoutX="42" layoutY="130" spacing="12" prefWidth="250">
+
+            <TextField fx:id="txtUsername" promptText="Email hoặc tên đăng nhập"/>
+
+            <PasswordField fx:id="pfPassword" promptText="Mật khẩu"/>
+
+            <PasswordField fx:id="pfConfirm" promptText="Nhập lại mật khẩu"/>
+
+            <Label fx:id="lblError"
+                   visible="false"
+                   wrapText="true"
+                   style="-fx-text-fill: red;"/>
+
+            <Button text="ĐĂNG KÝ"
+                    onAction="#handleRegister"
+                    styleClass="btnLogin"
+                    prefWidth="250"/>
+
+        </VBox>
+
+        <Hyperlink text="Đã có tài khoản? Đăng nhập"
+                   layoutX="70"
+                   layoutY="470"
+                   styleClass="linkRegister"
+                   onAction="#backToLogin"/>
+
+    </children>
+</AnchorPane>
