@@ -1,3 +1,5 @@
-class ForgotPasswordController{
+package com.myapp.controller;
+
+public class ForgotPasswordController{
 
 }
