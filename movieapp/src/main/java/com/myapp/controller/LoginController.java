@@ -69,7 +69,6 @@ public class LoginController {
     @FXML
     private void handleForgotPassword() {
         System.out.println("Đi tới màn hình quên mật khẩu");
-        // TODO: load forgot_password.fxml
     }
 
     @FXML
@@ -79,8 +78,7 @@ public class LoginController {
                     .getScene().getWindow();
 
             Scene scene = new Scene(
-                    FXMLLoader.load(getClass()
-                            .getResource("/view/register.fxml"))
+                    FXMLLoader.load(getClass().getResource("/view/register.fxml"))
             );
 
             stage.setScene(scene);
