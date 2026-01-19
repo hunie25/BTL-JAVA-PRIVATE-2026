@@ -114,7 +114,7 @@
                 </StackPane>
             </children>
         </VBox>
-        <Hyperlink fx:id="linkForgotPassword" styleClass="linkForgotPassword" layoutX="193.0" layoutY="371.0" style="-fx-text-fill: #8b949e;" text="Quên mật khẩu" textFill="#8b949e" />
+        <Hyperlink fx:id="linkForgotPassword" styleClass="linkForgotPassword" layoutX="193.0" layoutY="371.0" style="-fx-text-fill: #8b949e;" text="Quên mật khẩu" textFill="#8b949e" onAction="#handleForgotPassword" />
         <Button fx:id="btnLogin" styleClass="btnLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="427.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG NHẬP" onAction="#handleLogin" textAlignment="CENTER">
             <font>
                 <Font name="Arial Hebrew Scholar Bold" size="15.0" />
