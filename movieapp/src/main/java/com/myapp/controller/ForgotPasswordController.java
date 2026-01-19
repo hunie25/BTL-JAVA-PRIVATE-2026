@@ -61,9 +61,7 @@ public class ForgotPasswordController {
                     .getScene().getWindow();
 
             Scene scene = new Scene(
-                    FXMLLoader.load(
-                            getClass().getResource("/view/otp.fxml")
-                    )
+                    FXMLLoader.load(getClass().getResource("/view/otp.fxml"))
             );
 
             stage.setScene(scene);

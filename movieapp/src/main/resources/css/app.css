@@ -1,0 +1,244 @@
+/* =========================
+   BASE THEME (ONE SOURCE OF TRUTH)
+========================= */
+.app-root {
+    -fx-background-color: #0D1117;
+    -fx-font-family: "Segoe UI";
+}
+
+/* =========================
+   TOP BAR
+========================= */
+.topbar {
+    -fx-padding: 14;
+    -fx-background-color: #0B0F14;
+}
+
+.title {
+    -fx-text-fill: #E6EDF3;
+    -fx-font-size: 17px;
+    -fx-font-weight: 800;
+}
+
+.section-title {
+    -fx-text-fill: #C9D1D9;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+}
+
+.muted {
+    -fx-text-fill: #8B949E;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+/* =========================
+   SCROLLPANE (MAIN)
+========================= */
+.scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-padding: 0;
+}
+
+.scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* thin scrollbar */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical .track, .scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb {
+    -fx-background-color: #1F2630;
+    -fx-background-insets: 2;
+    -fx-background-radius: 999;
+}
+.scroll-bar:vertical .thumb:hover, .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #252F3D;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* page padding */
+.content {
+    -fx-padding: 14;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-accent {
+    -fx-background-color: #FF8C00;
+    -fx-text-fill: #0D1117;
+    -fx-font-weight: 900;
+    -fx-background-radius: 999;
+    -fx-padding: 10 16;
+}
+.btn-accent:pressed { -fx-background-color: #E07B00; }
+
+.btn-dark {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+    -fx-font-weight: 800;
+    -fx-background-radius: 999;
+    -fx-padding: 10 16;
+    -fx-border-color: #2B2F36;
+    -fx-border-radius: 999;
+}
+.btn-dark:hover { -fx-background-color: #1B222B; }
+.btn-dark:pressed { -fx-background-color: #141A21; }
+
+/* =========================
+   WATCH - VIDEO STACK + OVERLAY
+   (matches your watch.fxml)
+========================= */
+
+.video-stack{
+  -fx-background-color:#0B0F14;
+  -fx-background-radius:16;
+  -fx-padding:8;
+  -fx-border-color:#2B2F36;
+  -fx-border-radius:16;
+}
+
+.video-view{
+  -fx-smooth:true;
+  -fx-background-color:black;
+}
+
+.overlay-dim{
+  -fx-background-color: rgba(0,0,0,0.45);
+  -fx-background-radius:16;
+}
+
+.overlay-controls{
+  -fx-padding: 12;
+  -fx-background-color: rgba(13,17,23,0.70);
+  -fx-background-radius: 16;
+}
+
+/* Seek */
+.seek {
+    -fx-padding: 2 0 6 0;
+}
+
+.seek .track{
+  -fx-background-color:#2B2F36;
+  -fx-background-radius:999;
+  -fx-pref-height:6px;
+}
+
+.seek .thumb{
+  -fx-background-color:#FF8C00;
+  -fx-background-radius:999;
+  -fx-pref-width:16px;
+  -fx-pref-height:16px;
+}
+.slider .thumb:hover { -fx-background-color: #FFA033; }
+
+/* Desc label (NOT TextArea) */
+.desc-label {
+    -fx-text-fill: #E6EDF3;
+    -fx-background-color: #0B0F14;
+    -fx-background-radius: 12;
+    -fx-border-color: #2B2F36;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-font-size: 13px;
+}
+
+/* Episodes (FlowPane) */
+.episodes-pane {
+    -fx-padding: 2 2 10 2;
+}
+
+.episode-btn {
+    -fx-background-color: #1F2630;
+    -fx-text-fill: #E6EDF3;
+    -fx-font-weight: 900;
+    -fx-background-radius: 18;
+    -fx-border-color: #2B2F36;
+    -fx-border-radius: 18;
+    -fx-padding: 14 18;
+    -fx-min-height: 54;
+}
+.episode-btn:hover { -fx-background-color: #252F3D; }
+.episode-btn:pressed { -fx-background-color: #1A212A; }
+
+.episode-btn-active {
+    -fx-background-color: #FF8C00;
+    -fx-text-fill: #0D1117;
+    -fx-border-color: #FF8C00;
+}
+
+/* =========================
+   HOME - LISTVIEW CARD
+========================= */
+.movie-list {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+    -fx-control-inner-background: transparent;
+}
+
+.movie-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0;
+    -fx-text-fill: #E6EDF3;
+}
+
+.movie-list .list-cell:filled:selected,
+.movie-list .list-cell:filled:selected:hover,
+.movie-list .list-cell:filled:hover {
+    -fx-background-color: transparent;
+}
+
+.movie-card {
+    -fx-background-color: #0B0F14;
+    -fx-background-radius: 16;
+    -fx-border-color: #2B2F36;
+    -fx-border-radius: 16;
+    -fx-padding: 14;
+}
+
+.movie-list .list-cell:filled:selected .movie-card,
+.movie-list .list-cell:filled:hover .movie-card {
+    -fx-border-color: #FF8C00;
+}
+
+.movie-title {
+    -fx-text-fill: #E6EDF3;
+    -fx-font-size: 15px;
+    -fx-font-weight: 900;
+}
+
+.movie-year {
+    -fx-text-fill: #8B949E;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+}
+
+.movie-progress { -fx-accent: #FF8C00; }
+
+.movie-progress-text {
+    -fx-text-fill: #8B949E;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+}
+
+.bottombar {
+    -fx-padding: 10 14;
+    -fx-background-color: #0B0F14;
+}
