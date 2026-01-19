@@ -7,10 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="movieapp (1)" />
+        <module name="movieapp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="movieapp" target="24" />
-    </bytecodeTargetLevel>
   </component>
 </project>

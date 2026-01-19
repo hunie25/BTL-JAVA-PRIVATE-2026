@@ -1,17 +1,29 @@
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/Main.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/controller/ForgotPasswordController.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/controller/LoginController.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/controller/RegisterController.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/dao/UserDAO.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/exception/AuthException.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/exception/ForgotPasswordException.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/exception/OtpException.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/exception/RegisterException.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/exception/ResetPassword.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/model/User.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/service/AuthService.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/service/EmailService.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/service/OtpService.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/util/DBConnection.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/util/OtpGeneratorUtil.java
-/Users/tranhuyen08052006gmail.com/Documents/BTL JAVA 2026/BTL-JAVA-PRIVATE-2026/movieapp/src/main/java/com/myapp/util/SessionManager.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\ForgotPasswordController.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\HomeController.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\LoginController.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\MovieCardCell.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\RegisterController.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\controller\WatchController.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\dao\OphimApiClient.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\dao\UserDAO.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\exception\AuthException.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\exception\ForgotPasswordException.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\exception\OtpException.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\exception\RegisterException.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\exception\ResetPassword.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\Main.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\MainApp.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\model\Episode.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\model\Movie.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\model\MovieDetail.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\model\User.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\service\AuthService.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\service\EmailService.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\service\MovieService.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\service\OtpService.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\DBConnection.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\ImageCache.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\OtpGeneratorUtil.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\SceneNavigator.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\SessionManager.java
+D:\JavaFX__Co_Ban\BTL-JAVA-PRIVATE-2026\movieapp\src\main\java\com\myapp\util\UiUtils.java
