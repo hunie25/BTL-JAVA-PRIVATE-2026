@@ -67,9 +67,24 @@ public class LoginController {
     }
 
     @FXML
-    private void handleForgotPassword() {
-        System.out.println("Đi tới màn hình quên mật khẩu");
+    private void handleForgotPassword(javafx.event.ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource())
+                    .getScene().getWindow();
+
+            Scene scene = new Scene(
+                    FXMLLoader.load(
+                            getClass().getResource("/view/forgotPassword.fxml")
+                    )
+            );
+
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void goToRegister(javafx.event.ActionEvent event) {

@@ -17,7 +17,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="335.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.myapp.controller.LoginController"
+            fx:controller="com.myapp.controller.RegisterController"
             stylesheets="@../css/style.css"
             style="-fx-background-color: #0D1117;">
 
@@ -112,22 +112,76 @@
                         </ImageView>
                     </children>
                 </StackPane>
+                <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Xác nhận lại mật khẩu">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                 </Text>
+                <StackPane prefHeight="30.0" prefWidth="250.0">
+                    <children>
+                        <ImageView fitHeight="10" fitWidth="10"
+                                   StackPane.alignment="CENTER_LEFT">
+                            <StackPane.margin>
+                                <Insets left="10"/>
+                            </StackPane.margin>
+                            <image>
+                                <Image url="@../images/lock.png"/>
+                            </image>
+                        </ImageView>
+
+                        <PasswordField fx:id="pfConfirmPassword"
+                                    promptText="123456"
+                                    opacity="0.5">
+                            <StackPane.margin>
+                                <Insets top="10"/>
+                            </StackPane.margin>
+                            <padding>
+                                <Insets left="20" right="20"/>
+                            </padding>
+                        </PasswordField>
+
+                        <TextField fx:id="tfConfirmPassword"
+                                visible="false"
+                                 managed="false">
+                            <StackPane.margin>
+                                <Insets top="10"/>
+                            </StackPane.margin>
+                            <padding>
+                                <Insets left="20" right="20"/>
+                            </padding>
+                        </TextField>
+
+                        <ImageView fitHeight="15" fitWidth="18"
+                                StackPane.alignment="CENTER_RIGHT"
+                                onMouseClicked="#togglePassword"
+                                style="-fx-cursor: hand;">
+                            <StackPane.margin>
+                                <Insets right="10"/>
+                            </StackPane.margin>
+                            <image>
+                                <Image url="@../images/eye.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
             </children>
         </VBox>
-        <Hyperlink fx:id="linkForgotPassword" styleClass="linkForgotPassword" layoutX="193.0" layoutY="371.0" style="-fx-text-fill: #8b949e;" text="Quên mật khẩu" textFill="#8b949e" onAction="#handleForgotPassword" />
-        <Button fx:id="btnLogin" styleClass="btnLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="427.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG NHẬP" onAction="#handleLogin" textAlignment="CENTER">
+        <Button fx:id="btnRegister"  alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="450.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG KÝ" onAction="#handleRegister" textAlignment="CENTER">
             <font>
                 <Font name="Arial Hebrew Scholar Bold" size="15.0" />
             </font>
         </Button>
-        <Hyperlink fx:id="linkRegister" onAction="#goToRegister" styleClass="linkRegister" layoutX="79.0" layoutY="476.0" style="-fx-text-fill: #8b949e;" text="Chưa có tài khoản? Đăng ký" />
+        <Hyperlink fx:id="linkLogin" onAction="#goToLogin" styleClass="linkRegister" layoutX="97.0" layoutY="490.0" style="-fx-text-fill: #8b949e;" text="Quay lại trang đăng nhập" />
         <Label fx:id="lblError"
-               layoutX="42"
-               layoutY="395"
+               layoutX="40"
+               layoutY="425"
+               prefWidth="280"
                textFill="RED"
                visible="false"
                wrapText="true"
-               maxWidth="250"
                alignment="CENTER"/>
     </children>
 </AnchorPane>
