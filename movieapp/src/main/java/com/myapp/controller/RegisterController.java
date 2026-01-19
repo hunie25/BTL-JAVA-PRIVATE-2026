@@ -94,9 +94,9 @@ public class RegisterController {
     @FXML
     private void goToLogin(MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Scene scene = new Scene(loader.load());
-
+            Scene scene = new Scene(
+                    FXMLLoader.load(getClass().getResource("/view/login.fxml"))
+            );
             Stage stage;
             if (event != null) {
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
