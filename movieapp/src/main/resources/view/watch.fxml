@@ -7,6 +7,10 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.myapp.controller.WatchController"
+            prefWidth="420"
+            prefHeight="800"
+            maxWidth="420"
+            maxHeight="800"
             styleClass="app-root">
 
     <!-- TOP BAR -->

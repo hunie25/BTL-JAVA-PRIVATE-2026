@@ -7,6 +7,10 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.myapp.controller.HomeController"
+            prefWidth="420"
+            prefHeight="800"
+            maxWidth="420"
+            maxHeight="800"
             styleClass="app-root">
 
     <!-- TOP BAR -->
@@ -23,7 +27,7 @@
     <!-- CENTER: LIST (có padding giống app) -->
     <center>
         <StackPane styleClass="page">
-            <ListView fx:id="lvMovies" styleClass="movie-list"/>
+            <ListView fx:id="lvMovies" styleClass="movie-list" maxWidth="Infinity" VBox.vgrow="ALWAYS"/>
         </StackPane>
     </center>
 

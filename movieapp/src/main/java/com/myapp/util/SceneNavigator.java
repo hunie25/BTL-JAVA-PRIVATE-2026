@@ -9,14 +9,34 @@ public class SceneNavigator {
     private static Stage stage;
 
     // Kích thước giả lập điện thoại (portrait)
-    private static final int PHONE_W = 420;
-    private static final int PHONE_H = 800;
+    private static final int PHONE_W = 340;
+    private static final int PHONE_H = 700;
 
     private SceneNavigator() {}
 
     public static void init(Stage primaryStage) {
         stage = primaryStage;
         stage.setResizable(false); // giả lập điện thoại
+    }
+
+    public static void goLogin() {
+        setScene("/view/login.fxml", PHONE_W, PHONE_H, null);
+    }
+
+    public static void goRegister() {
+        setScene("/view/register.fxml", PHONE_W, PHONE_H, null);
+    }
+
+    public static void goForgotPassword() {
+        setScene("/view/forgotPassword.fxml", PHONE_W, PHONE_H, null);
+    }
+
+    public static void goOtp() {
+        setScene("/view/otp.fxml", PHONE_W, PHONE_H, null);
+    }
+
+    public static void goResetPassword() {
+        setScene("/view/resetPassword.fxml", PHONE_W, PHONE_H, null);
     }
 
     public static void goHome() {
@@ -58,10 +78,15 @@ public class SceneNavigator {
             if (css != null) scene.getStylesheets().add(css.toExternalForm());
 
             stage.setScene(scene);
-            stage.setWidth(w);
-            stage.setHeight(h);
-            stage.centerOnScreen();
+            stage.setMinWidth(w);
+            stage.setMaxWidth(w);
+            stage.setMinHeight(h);
+            stage.setMaxHeight(h);
 
+            /* để scene tự quyết định */
+            stage.sizeToScene();
+
+            stage.centerOnScreen();
         } catch (Exception e) {
             throw new RuntimeException("Cannot load " + fxmlPath, e);
         }

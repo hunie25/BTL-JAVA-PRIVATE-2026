@@ -8,7 +8,8 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         SceneNavigator.init(stage);
-        SceneNavigator.goHome();
+        SceneNavigator.goLogin();
+//        SceneNavigator.goHome();
         stage.setTitle("Movie App - Week 1 (Xem phim)");
         stage.show();
     }

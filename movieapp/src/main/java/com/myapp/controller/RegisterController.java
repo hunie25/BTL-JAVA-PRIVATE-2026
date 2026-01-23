@@ -104,7 +104,6 @@ public class RegisterController {
                 stage = (Stage) txtUsername.getScene().getWindow();
             }
 
-            stage.setScene(scene);
             stage.show();
 
         } catch (Exception e) {

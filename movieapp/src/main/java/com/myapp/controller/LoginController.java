@@ -47,22 +47,20 @@ public class LoginController {
     }
 
     @FXML
-    private void handleLogin() {
-        String username = txtUsername.getText().trim();
-        String password = isShowPassword
-                ? tfPassword.getText()
-                : pfPassword.getText();
+    private void handleLogin(javafx.event.ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource())
+                    .getScene().getWindow();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Vui lòng nhập đầy đủ thông tin");
-            return;
-        }
+            Scene scene = new Scene(
+                    FXMLLoader.load(
+                            getClass().getResource("/view/home.fxml")
+                    )
+            );
 
-        if (username.equals("admin") && password.equals("123456")) {
-            lblError.setVisible(false);
-            System.out.println("Đăng nhập thành công!");
-        } else {
-            showError("Sai tài khoản hoặc mật khẩu");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,7 +76,6 @@ public class LoginController {
                     )
             );
 
-            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,7 +93,6 @@ public class LoginController {
                     FXMLLoader.load(getClass().getResource("/view/register.fxml"))
             );
 
-            stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
         }
