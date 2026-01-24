@@ -1,24 +1,22 @@
 package com.myapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Episode {
-    private String name;     // Tập 1
-    private String fileUrl;  // link mp4/m3u8
+    private String name;
+    private String slug;
 
-    public Episode() {}
-
-    public Episode(String name, String fileUrl) {
-        this.name = name;
-        this.fileUrl = fileUrl;
-    }
+    @JsonProperty("link_m3u8") // Map chính xác key này
+    private String linkM3u8;
 
     public String getName() { return name; }
-    public String getFileUrl() { return fileUrl; }
-
     public void setName(String name) { this.name = name; }
-    public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
+
+    public String getLinkM3u8() { return linkM3u8; }
+    public void setLinkM3u8(String linkM3u8) { this.linkM3u8 = linkM3u8; }
 }
