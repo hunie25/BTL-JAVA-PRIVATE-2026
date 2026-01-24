@@ -1,69 +1,64 @@
 package com.myapp.util;
 
+import com.myapp.controller.WatchController;
+import com.myapp.model.Movie;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.io.IOException;
 
 public class SceneNavigator {
-    private static Stage stage;
 
-    // Kích thước giả lập điện thoại (portrait)
-    private static final int PHONE_W = 420;
-    private static final int PHONE_H = 800;
+    private static Stage mainStage;
 
-    private SceneNavigator() {}
+    // Các đường dẫn đến file FXML
+    public static final String HOME_FXML = "/fxml/home.fxml";
+    public static final String WATCH_FXML = "/fxml/watch.fxml";
 
-    public static void init(Stage primaryStage) {
-        stage = primaryStage;
-        stage.setResizable(false); // giả lập điện thoại
+    /**
+     * Gọi hàm này ở MainApp để set Stage chính
+     */
+    public static void setMainStage(Stage stage) {
+        mainStage = stage;
     }
 
-    public static void goHome() {
-        setScene("/view/home.fxml", PHONE_W, PHONE_H, null);
-    }
-
-    public static void goWatch(String slug) {
-        setScene("/view/watch.fxml", PHONE_W, PHONE_H, slug);
-    }
-
-    // Optional: test xoay ngang “giống điện thoại”
-    public static void setLandscape(boolean landscape) {
-        if (stage == null) return;
-        if (landscape) {
-            stage.setWidth(PHONE_H);
-            stage.setHeight(PHONE_W);
-        } else {
-            stage.setWidth(PHONE_W);
-            stage.setHeight(PHONE_H);
-        }
-        stage.centerOnScreen();
-    }
-
-    private static void setScene(String fxmlPath, int w, int h, String slug) {
+    /**
+     * Chuyển về trang chủ
+     */
+    public static void loadHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(HOME_FXML));
             Parent root = loader.load();
 
-            // truyền slug nếu controller có setSlug(String)
-            if (slug != null) {
-                Object controller = loader.getController();
-                try {
-                    controller.getClass().getMethod("setSlug", String.class).invoke(controller, slug);
-                } catch (NoSuchMethodException ignore) {}
-            }
+            // Giữ nguyên kích thước cửa sổ hiện tại hoặc set lại nếu muốn
+            Scene scene = new Scene(root, mainStage.getScene().getWidth(), mainStage.getScene().getHeight());
+            mainStage.setScene(scene);
 
-            Scene scene = new Scene(root, w, h);
-            var css = SceneNavigator.class.getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+        } catch (IOException e) {
+            e.printStackTrace();
+            UiUtils.showError("Lỗi hệ thống", "Không thể tải trang chủ: " + e.getMessage());
+        }
+    }
 
-            stage.setScene(scene);
-            stage.setWidth(w);
-            stage.setHeight(h);
-            stage.centerOnScreen();
+    /**
+     * Chuyển sang trang xem phim và truyền dữ liệu phim vào
+     */
+    public static void loadWatchScene(Movie movie) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(WATCH_FXML));
+            Parent root = loader.load();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot load " + fxmlPath, e);
+            // Lấy controller của màn hình Watch để truyền dữ liệu phim
+            WatchController controller = loader.getController();
+            controller.initData(movie); // Truyền object Movie vào để load tập phim
+
+            Scene scene = new Scene(root, mainStage.getScene().getWidth(), mainStage.getScene().getHeight());
+            mainStage.setScene(scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            UiUtils.showError("Lỗi hệ thống", "Không thể mở trang xem phim: " + e.getMessage());
         }
     }
 }
