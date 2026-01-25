@@ -57,7 +57,7 @@ public class LoginController {
                             getClass().getResource("/view/home.fxml")
                     )
             );
-
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class LoginController {
                             getClass().getResource("/view/forgotPassword.fxml")
                     )
             );
-
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +92,8 @@ public class LoginController {
             Scene scene = new Scene(
                     FXMLLoader.load(getClass().getResource("/view/register.fxml"))
             );
-
+            stage.setScene(scene);   // ✅ BẮT BUỘC
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

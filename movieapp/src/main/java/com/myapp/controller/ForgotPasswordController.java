@@ -47,7 +47,8 @@ public class ForgotPasswordController {
             Scene scene = new Scene(
                     FXMLLoader.load(getClass().getResource("/view/login.fxml"))
             );
-
+            stage.setScene(scene);
+            stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,6 +63,9 @@ public class ForgotPasswordController {
             Scene scene = new Scene(
                     FXMLLoader.load(getClass().getResource("/view/otp.fxml"))
             );
+
+            stage.setScene(scene);
+            stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();

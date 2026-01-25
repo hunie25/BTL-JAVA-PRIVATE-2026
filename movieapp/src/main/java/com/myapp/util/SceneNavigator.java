@@ -9,8 +9,8 @@ public class SceneNavigator {
     private static Stage stage;
 
     // Kích thước giả lập điện thoại (portrait)
-    private static final int PHONE_W = 340;
-    private static final int PHONE_H = 700;
+    private static final int PHONE_W = 335;
+    private static final int PHONE_H = 620;
 
     private SceneNavigator() {}
 

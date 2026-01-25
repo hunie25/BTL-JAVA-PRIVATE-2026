@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import javafx.event.ActionEvent;
+
 public class RegisterController {
     @FXML
     private TextField txtUsername;
@@ -57,59 +59,46 @@ public class RegisterController {
     }
 
     @FXML
-    private void togglePassword(MouseEvent event) {
+    private void togglePassword() {
+        toggle(pfPassword, tfPassword);
+    }
 
-        // password
-        if (pfPassword.isVisible()) {
-            tfPassword.setText(pfPassword.getText());
-            tfPassword.setVisible(true);
-            tfPassword.setManaged(true);
-            pfPassword.setVisible(false);
-            pfPassword.setManaged(false);
-        } else {
-            pfPassword.setText(tfPassword.getText());
-            pfPassword.setVisible(true);
-            pfPassword.setManaged(true);
-            tfPassword.setVisible(false);
-            tfPassword.setManaged(false);
-        }
+    @FXML
+    private void toggleConfirmPassword() {
+        toggle(pfConfirmPassword, tfConfirmPassword);
+    }
 
-        // confirm password
-        if (pfConfirmPassword.isVisible()) {
-            tfConfirmPassword.setText(pfConfirmPassword.getText());
-            tfConfirmPassword.setVisible(true);
-            tfConfirmPassword.setManaged(true);
-            pfConfirmPassword.setVisible(false);
-            pfConfirmPassword.setManaged(false);
+    private void toggle(PasswordField pf, TextField tf) {
+        if (pf.isVisible()) {
+            tf.setText(pf.getText());
+            tf.setVisible(true);
+            tf.setManaged(true);
+            pf.setVisible(false);
+            pf.setManaged(false);
         } else {
-            pfConfirmPassword.setText(tfConfirmPassword.getText());
-            pfConfirmPassword.setVisible(true);
-            pfConfirmPassword.setManaged(true);
-            tfConfirmPassword.setVisible(false);
-            tfConfirmPassword.setManaged(false);
+            pf.setText(tf.getText());
+            pf.setVisible(true);
+            pf.setManaged(true);
+            tf.setVisible(false);
+            tf.setManaged(false);
         }
     }
 
-
     @FXML
-    private void goToLogin(MouseEvent event) {
+    private void goToLogin(ActionEvent event) {
         try {
-            Scene scene = new Scene(
+            Stage stage = (Stage) ((Node) event.getSource())
+                    .getScene().getWindow();
+
+            stage.setScene(new Scene(
                     FXMLLoader.load(getClass().getResource("/view/login.fxml"))
-            );
-            Stage stage;
-            if (event != null) {
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) txtUsername.getScene().getWindow();
-            }
-
+            ));
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private void showError(String message) {
         lblError.setText(message);
