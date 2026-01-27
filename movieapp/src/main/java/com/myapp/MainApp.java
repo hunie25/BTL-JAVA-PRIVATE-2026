@@ -11,11 +11,14 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         SceneNavigator.setMainStage(primaryStage);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/home.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 375, 812);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/css/app.css").toExternalForm());
         primaryStage.setTitle("OPhim Hub");
+        primaryStage.setWidth(375);
+        primaryStage.setHeight(812);
+        primaryStage.setResizable(false); // QUAN TRỌNG
         primaryStage.setScene(scene);
         primaryStage.show();
     }

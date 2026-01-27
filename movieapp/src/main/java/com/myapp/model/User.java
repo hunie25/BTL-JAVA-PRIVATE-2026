@@ -1,5 +1,7 @@
 package com.myapp.model;
 
+import javafx.stage.Stage;
+
 public class User {
     private int id;
     private String username;

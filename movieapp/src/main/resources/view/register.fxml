@@ -156,7 +156,7 @@
 
                         <ImageView fitHeight="15" fitWidth="18"
                                 StackPane.alignment="CENTER_RIGHT"
-                                onMouseClicked="#togglePassword"
+                                onMouseClicked="#toggleConfirmPassword"
                                 style="-fx-cursor: hand;">
                             <StackPane.margin>
                                 <Insets right="10"/>

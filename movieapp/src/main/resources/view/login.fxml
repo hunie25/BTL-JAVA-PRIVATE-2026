@@ -22,18 +22,18 @@
             style="-fx-background-color: #0D1117;">
 
     <children>
-        <ImageView fitHeight="104.0" fitWidth="144.0" layoutX="110.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="104.0" fitWidth="144.0" layoutX="150.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../images/logo.png" />
             </image>
         </ImageView>
-        <Text fill="DARKORANGE" layoutX="97.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(gaussian, rgba(255,140,0,0.8), 15, 0.4, 0, 0;" text="HUB FILMS">
+        <Text fill="DARKORANGE" layoutX="137.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(gaussian, rgba(255,140,0,0.8), 15, 0.4, 0, 0;" text="HUB FILMS">
             <font>
                 <Font name="Arial Rounded MT Bold" size="25.0" />
             </font>
         </Text>
-        <Text fill="#8b949e" layoutX="97.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chào mừng quay trở lại" />
-        <VBox layoutX="42.0" layoutY="247.0" prefHeight="92.0" prefWidth="250.0">
+        <Text fill="#8b949e" layoutX="110.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chào mừng quay trở lại" />
+        <VBox layoutX="42.0" layoutY="270.0" prefHeight="109.0" prefWidth="250.0">
             <children>
                 <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Email hoặc tên đăng nhập">
                     <VBox.margin>
@@ -114,16 +114,16 @@
                 </StackPane>
             </children>
         </VBox>
-        <Hyperlink fx:id="linkForgotPassword" styleClass="linkForgotPassword" layoutX="193.0" layoutY="371.0" style="-fx-text-fill: #8b949e;" text="Quên mật khẩu" textFill="#8b949e" onAction="#handleForgotPassword" />
-        <Button fx:id="btnLogin" styleClass="btnLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="427.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG NHẬP" onAction="#handleLogin" textAlignment="CENTER">
+        <Hyperlink fx:id="linkForgotPassword" styleClass="linkForgotPassword" layoutX="130.0" layoutY="389.0" style="-fx-text-fill: #8b949e;" text="Quên mật khẩu" textFill="#8b949e" onAction="#handleForgotPassword" />
+        <Button fx:id="btnLogin" styleClass="btnLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="80.0" layoutY="444.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG NHẬP" onAction="#handleLogin" textAlignment="CENTER">
             <font>
                 <Font name="Arial Hebrew Scholar Bold" size="15.0" />
             </font>
         </Button>
-        <Hyperlink fx:id="linkRegister" onAction="#goToRegister" styleClass="linkRegister" layoutX="79.0" layoutY="476.0" style="-fx-text-fill: #8b949e;" text="Chưa có tài khoản? Đăng ký" />
+        <Hyperlink fx:id="linkRegister" onAction="#goToRegister" styleClass="linkRegister" layoutX="100.0" layoutY="493.0" style="-fx-text-fill: #8b949e;" text="Chưa có tài khoản? Đăng ký" />
         <Label fx:id="lblError"
-               layoutX="42"
-               layoutY="395"
+               layoutX="70"
+               layoutY="412"
                textFill="RED"
                visible="false"
                wrapText="true"

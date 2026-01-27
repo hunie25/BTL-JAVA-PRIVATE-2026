@@ -1,33 +1,50 @@
 package com.myapp.service;
 
-import com.myapp.dao.UserDAO;
 import com.myapp.exception.ForgotPasswordException;
 import com.myapp.util.OtpGeneratorUtil;
-import com.myapp.util.SessionManager;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OtpService {
 
-    private final UserDAO userDAO = new UserDAO();
     private final EmailService emailService = new EmailService();
 
+    private final Map<String, String> otpStore = new HashMap<>();
+    private final Map<String, LocalDateTime> otpExpiry = new HashMap<>();
+
     public void sendOtp(String email) throws ForgotPasswordException {
-        if (email == null || email.isBlank()) {
-            throw new ForgotPasswordException("Vui lòng nhập email");
-        }
 
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new ForgotPasswordException("Email không hợp lệ");
-        }
-
-        if (!userDAO.existsByEmail(email)) {
-            throw new ForgotPasswordException("Email không tồn tại");
+        if (email == null || email.isBlank()) {throw new ForgotPasswordException("Email không được để trống");
         }
 
         String otp = OtpGeneratorUtil.generateOtp();
 
-        emailService.sendOtp(email, otp);
+        otpStore.put(email, otp);
+        otpExpiry.put(email, LocalDateTime.now().plusMinutes(5));
 
-        SessionManager.set("RESET_EMAIL", email);
-        SessionManager.set("RESET_OTP", otp);
+        emailService.sendOtp(email, otp);
+    }
+
+    public boolean verifyOtp(String email, String inputOtp) throws ForgotPasswordException {
+
+        if (!otpStore.containsKey(email)) {throw new ForgotPasswordException("OTP không tồn tại");
+        }
+
+        if (LocalDateTime.now().isAfter(otpExpiry.get(email))) {
+            throw new ForgotPasswordException("OTP đã hết hạn");
+        }
+
+        if (!otpStore.get(email).equals(inputOtp)) {
+            throw new ForgotPasswordException("OTP không đúng");
+        }
+
+        if (email == null) {
+            throw new ForgotPasswordException("Phiên làm việc đã hết hạn");
+        }
+
+
+        return true;
     }
 }
