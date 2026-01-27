@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.shape.SVGPath?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.myapp.controller.WatchController"
+            stylesheets="@../css/app.css"
+            style="-fx-background-color: #050505;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+            <VBox>
+                <Label text="HUB" styleClass="logo-text"/>
+                <Label text="FILMS" styleClass="logo-sub" style="-fx-translate-y: -3;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="TRANG CHỦ" styleClass="nav-link" onMouseClicked="#goHome"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background: #050505; -fx-background-color: transparent;">
+
+            <VBox style="-fx-background-color: #050505; -fx-padding: 0 0 40 0;">
+
+                <StackPane fx:id="videoContainer"
+                           style="-fx-background-color: black; -fx-alignment: CENTER;"
+                           onMouseMoved="#onUserInteraction"
+                           onMouseClicked="#onUserInteraction"
+                           onMouseExited="#hideControlsImmediately">
+
+                    <MediaView fx:id="mediaView" />
+
+                    <Button fx:id="centerPlayBtn" styleClass="center-play-btn" onAction="#togglePlay" visible="false">
+                        <graphic>
+                            <SVGPath content="M8 5v14l11-7z" fill="white" scaleX="1.5" scaleY="1.5"/>
+                        </graphic>
+                    </Button>
+
+                    <VBox fx:id="speedMenu" styleClass="popup-menu" visible="false"
+                          StackPane.alignment="BOTTOM_RIGHT" style="-fx-translate-y: -15; -fx-translate-x: -10;">
+                        <Button text="0.5x" styleClass="speed-item" onAction="#setSpeed05" maxWidth="Infinity"/>
+                        <Button text="1.0x (Normal)" styleClass="speed-item" fx:id="btnSpeed10" onAction="#setSpeed10" maxWidth="Infinity"/>
+                        <Button text="1.25x" styleClass="speed-item" onAction="#setSpeed125" maxWidth="Infinity"/>
+                        <Button text="1.5x" styleClass="speed-item" onAction="#setSpeed15" maxWidth="Infinity"/>
+                        <Button text="2.0x" styleClass="speed-item" onAction="#setSpeed20" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox fx:id="volumePopup" styleClass="volume-popup" visible="false"
+                          StackPane.alignment="BOTTOM_LEFT" style="-fx-translate-y: -65; -fx-translate-x: 58;">
+                        <Label fx:id="lblVolumeValue" text="100" styleClass="volume-label"/>
+                        <Slider fx:id="volumeSlider" styleClass="volume-slider-vertical" orientation="VERTICAL"
+                                min="0" max="1" value="1" prefHeight="80"/>
+                    </VBox>
+
+                    <BorderPane fx:id="controlsPane" styleClass="video-controls-overlay" StackPane.alignment="BOTTOM_CENTER" maxHeight="60">
+                        <top>
+                            <Slider fx:id="progressSlider" styleClass="custom-slider" style="-fx-cursor: hand; -fx-padding: 0 0 10 0;"/>
+                        </top>
+                        <center>
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Button fx:id="btnPlay" styleClass="video-btn" onAction="#togglePlay">
+                                    <graphic>
+                                        <SVGPath fx:id="iconPlayPause" content="M8 5v14l11-7z" styleClass="svg-icon"/>
+                                    </graphic>
+                                </Button>
+
+                                <Button styleClass="video-btn" onAction="#toggleVolumePopup">
+                                    <graphic>
+                                        <SVGPath content="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" styleClass="svg-icon"/>
+                                    </graphic>
+                                </Button>
+
+                                <Label fx:id="lblDuration" text="00:00 / 00:00" styleClass="video-time-label"/>
+
+                                <Region HBox.hgrow="ALWAYS"/>
+
+                                <Button fx:id="btnSettings" styleClass="video-btn" onAction="#toggleSpeedMenu">
+                                    <graphic>
+                                        <SVGPath content="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" styleClass="svg-icon" scaleX="0.8" scaleY="0.8"/>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnFullscreen" styleClass="video-btn" onAction="#toggleFullscreen">
+                                    <graphic>
+                                        <SVGPath content="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" styleClass="svg-icon" scaleX="1.2" scaleY="1.2"/>
+                                    </graphic>
+                                </Button>
+                            </HBox>
+                        </center>
+                    </BorderPane>
+                </StackPane>
+
+                <VBox spacing="25" style="-fx-padding: 20 20;">
+                    <VBox spacing="10" style="-fx-background-color: #0a0a0a; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 10, 0, 0, 0);">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Label text="▶" style="-fx-text-fill: #a855f7; -fx-font-size: 14px;"/>
+                            <Label text="CHỌN TẬP PHIM" styleClass="section-header"/>
+                        </HBox>
+                        <Label text="VIETSUB #1 _________________________________" styleClass="section-subheader"/>
+                        <FlowPane fx:id="episodeContainer" hgap="10" vgap="10"/>
+                    </VBox>
+
+                    <VBox spacing="5">
+                        <Label fx:id="lblTitle" text="Đang tải..." styleClass="detail-title-main"/>
+                        <Label fx:id="lblOriginName" text="..." styleClass="detail-title-sub"/>
+                        <VBox spacing="8">
+                            <HBox styleClass="meta-row"><Label text="📅" styleClass="meta-icon"/><Label text="Năm:" styleClass="meta-label"/><Label fx:id="lblYear" text="..." styleClass="meta-value"/></HBox>
+                            <HBox styleClass="meta-row"><Label text="🕒" styleClass="meta-icon"/><Label text="Thời lượng:" styleClass="meta-label"/><Label fx:id="lblTime" text="..." styleClass="meta-value"/></HBox>
+                            <HBox styleClass="meta-row"><Label text="🌏" styleClass="meta-icon"/><Label text="Quốc gia:" styleClass="meta-label"/><Label fx:id="lblCountry" text="..." styleClass="meta-value"/></HBox>
+                            <HBox styleClass="meta-row"><Label text="🏷️" styleClass="meta-icon"/><Label text="Thể loại:" styleClass="meta-label"/><Label fx:id="lblCategory" text="..." styleClass="meta-value"/></HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Label text="ℹ️" style="-fx-font-size: 14px;"/>
+                            <Label text="GIỚI THIỆU PHIM" styleClass="section-header" style="-fx-font-size: 14px;"/>
+                        </HBox>
+                        <Label fx:id="lblDesc" text="..." styleClass="description-content"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

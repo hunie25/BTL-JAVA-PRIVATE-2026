@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.myapp.controller.HomeController"
+            stylesheets="@../css/app.css"
+            style="-fx-background-color: #050505;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+            <VBox>
+                <Label text="HUB" styleClass="logo-text"/>
+                <Label text="FILMS" styleClass="logo-sub" style="-fx-translate-y: -3;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label text="TRANG CHỦ" styleClass="nav-link" onMouseClicked="#resetHome"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER"
+                    style="-fx-background: #050505; -fx-background-color: transparent;">
+
+            <VBox style="-fx-padding: 0 20 0 20;"> <VBox fx:id="heroSection" spacing="5" style="-fx-padding: 10 0 10 0;">
+                <Label text="PHIM MỚI CẬP" styleClass="hero-title"/>
+                <Label text="NHẬT" styleClass="hero-title" style="-fx-translate-y: -10;"/>
+                <Label text="TRẢI NGHIỆM ĐIỆN ẢNH ĐỈNH CAO MỖI NGÀY TẠI HUB FILMS VỚI KHO PHIM KHỔNG LỒ"
+                       styleClass="hero-subtitle"
+                       wrapText="true"
+                       maxWidth="330"/>
+            </VBox>
+
+                <HBox spacing="15" styleClass="pagination-box" alignment="CENTER_LEFT">
+                    <Button text="&lt;" onAction="#prevPage" styleClass="btn-nav-arrow"/>
+                    <Button fx:id="btnPageInfo" text="TRANG 1" styleClass="btn-page-active"/>
+                    <Button text="&gt;" onAction="#nextPage" styleClass="btn-nav-arrow"/>
+                </HBox>
+
+                <FlowPane fx:id="movieContainer" hgap="15" vgap="25" alignment="CENTER_LEFT"/>
+
+                <VBox styleClass="footer-box" alignment="CENTER" spacing="2">
+                    <Label text="HUB" styleClass="footer-logo"/>
+                    <Label text="FILMS" styleClass="footer-logo-sub"/>
+
+                    <Label text="DỮ LIỆU CUNG CẤP BỞI OPHIM API • COPYRIGHT © 2026 HUB FILMS"
+                           styleClass="footer-text"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

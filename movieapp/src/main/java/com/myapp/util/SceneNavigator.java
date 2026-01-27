@@ -1,94 +1,116 @@
 package com.myapp.util;
 
+import com.myapp.controller.WatchController;
+import com.myapp.model.Movie;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class SceneNavigator {
-    private static Stage stage;
+import java.io.IOException;
 
-    // Kích thước giả lập điện thoại (portrait)
-    private static final int PHONE_W = 335;
-    private static final int PHONE_H = 620;
+public class SceneNavigator {
+
+    private static Stage mainStage;
+
+    // FXML paths
+    private static final String LOGIN_FXML = "/view/login.fxml";
+    private static final String REGISTER_FXML = "/view/register.fxml";
+    private static final String FORGOT_FXML = "/view/forgotPassword.fxml";
+    private static final String OTP_FXML = "/view/otp.fxml";
+    private static final String RESET_FXML = "/view/resetPassword.fxml";
+
+    public static final String HOME_FXML = "/fxml/home.fxml";
+    public static final String WATCH_FXML = "/fxml/watch.fxml";
 
     private SceneNavigator() {}
 
-    public static void init(Stage primaryStage) {
-        stage = primaryStage;
-        stage.setResizable(false); // giả lập điện thoại
+    /**
+     * Gọi ở MainApp.start()
+     */
+    public static void setMainStage(Stage stage) {
+        mainStage = stage;
     }
 
+    /* ===================== AUTH SCENES ===================== */
+
     public static void goLogin() {
-        setScene("/view/login.fxml", PHONE_W, PHONE_H, null);
+        switchScene(LOGIN_FXML);
     }
 
     public static void goRegister() {
-        setScene("/view/register.fxml", PHONE_W, PHONE_H, null);
+        switchScene(REGISTER_FXML);
     }
 
     public static void goForgotPassword() {
-        setScene("/view/forgotPassword.fxml", PHONE_W, PHONE_H, null);
+        switchScene(FORGOT_FXML);
     }
 
     public static void goOtp() {
-        setScene("/view/otp.fxml", PHONE_W, PHONE_H, null);
+        switchScene(OTP_FXML);
     }
 
     public static void goResetPassword() {
-        setScene("/view/resetPassword.fxml", PHONE_W, PHONE_H, null);
+        switchScene(RESET_FXML);
     }
 
-    public static void goHome() {
-        setScene("/view/home.fxml", PHONE_W, PHONE_H, null);
-    }
+    /* ===================== COMMON SWITCH ===================== */
 
-    public static void goWatch(String slug) {
-        setScene("/view/watch.fxml", PHONE_W, PHONE_H, slug);
-    }
-
-    // Optional: test xoay ngang “giống điện thoại”
-    public static void setLandscape(boolean landscape) {
-        if (stage == null) return;
-        if (landscape) {
-            stage.setWidth(PHONE_H);
-            stage.setHeight(PHONE_W);
-        } else {
-            stage.setWidth(PHONE_W);
-            stage.setHeight(PHONE_H);
-        }
-        stage.centerOnScreen();
-    }
-
-    private static void setScene(String fxmlPath, int w, int h, String slug) {
+    private static void switchScene(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            // truyền slug nếu controller có setSlug(String)
-            if (slug != null) {
-                Object controller = loader.getController();
-                try {
-                    controller.getClass().getMethod("setSlug", String.class).invoke(controller, slug);
-                } catch (NoSuchMethodException ignore) {}
+            Scene scene;
+            if (mainStage.getScene() != null) {
+                scene = new Scene(
+                        root,
+                        mainStage.getScene().getWidth(),
+                        mainStage.getScene().getHeight()
+                );
+            } else {
+                scene = new Scene(root);
             }
 
-            Scene scene = new Scene(root, w, h);
-            var css = SceneNavigator.class.getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            mainStage.setScene(scene);
+            mainStage.show();
 
-            stage.setScene(scene);
-            stage.setMinWidth(w);
-            stage.setMaxWidth(w);
-            stage.setMinHeight(h);
-            stage.setMaxHeight(h);
+        } catch (IOException e) {
+            e.printStackTrace();
+            UiUtils.showError("Lỗi hệ thống", "Không thể tải màn hình: " + e.getMessage());
+        }
+    }
 
-            /* để scene tự quyết định */
-            stage.sizeToScene();
+    /* ===================== HOME ===================== */
 
-            stage.centerOnScreen();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot load " + fxmlPath, e);
+    public static void loadHome() {
+        switchScene(HOME_FXML);
+    }
+
+    /* ===================== WATCH ===================== */
+
+    public static void loadWatchScene(Movie movie) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(WATCH_FXML));
+            Parent root = loader.load();
+
+            WatchController controller = loader.getController();
+            controller.initData(movie);
+
+            Scene scene = new Scene(
+                    root,
+                    mainStage.getScene().getWidth(),
+                    mainStage.getScene().getHeight()
+            );
+
+            mainStage.setScene(scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            UiUtils.showError(
+                    "Lỗi hệ thống",
+                    "Không thể mở trang xem phim: " + e.getMessage()
+            );
         }
     }
 }

@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
+import java.util.EventObject;
+
 
 public class LoginController {
 
@@ -54,9 +56,10 @@ public class LoginController {
 
             Scene scene = new Scene(
                     FXMLLoader.load(
-                            getClass().getResource("/view/home.fxml")
+                            getClass().getResource("/fxml/home.fxml")
                     )
             );
+
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -75,6 +78,7 @@ public class LoginController {
                             getClass().getResource("/view/forgotPassword.fxml")
                     )
             );
+
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -92,8 +96,8 @@ public class LoginController {
             Scene scene = new Scene(
                     FXMLLoader.load(getClass().getResource("/view/register.fxml"))
             );
-            stage.setScene(scene);   // ✅ BẮT BUỘC
-            stage.show();
+
+            stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
         }
