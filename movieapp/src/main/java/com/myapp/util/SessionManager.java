@@ -27,14 +27,18 @@ public class SessionManager {
         return currentUser != null;
     }
 
-    private static final Map<String, String> session = new HashMap<>();
+    private static final Map<String, Object> session = new HashMap<>();
 
-    public static void set(String key, String value) {
+    public static void set(String key, Object value) {
         session.put(key, value);
     }
 
-    public static String get(String key) {
+    public static Object get(String key) {
         return session.get(key);
+    }
+
+    public static void remove(String key) {
+        session.remove(key);
     }
 
     public static void clear() {

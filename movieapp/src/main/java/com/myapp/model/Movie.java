@@ -6,68 +6,39 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie {
-    private String name;
+    @JsonProperty("_id") private String id;
+    @JsonProperty("name") private String name;
+    @JsonProperty("slug") private String slug;
+    @JsonProperty("origin_name") private String originName;
+    @JsonProperty("poster_url") private String posterUrl;
+    @JsonProperty("thumb_url") private String thumbUrl;
+    @JsonProperty("year") private int year;
+    @JsonProperty("time") private String time;
+    @JsonProperty("content") private String content;
 
-    @JsonProperty("origin_name")
-    private String originName; // Tên tiếng Anh
+    // [FIX] Thêm trường country để hết báo đỏ
+    @JsonProperty("country") private List<Category> country;
+    @JsonProperty("category") private List<Category> category;
 
-    private String slug;
-
-    @JsonProperty("thumb_url")
-    private String thumbUrl;
-
-    @JsonProperty("content")
-    private String content;
-
-    @JsonProperty("time")
-    private String time; // Thời lượng
-
-    private int year;
-
-    // Danh sách thể loại và quốc gia (API trả về dạng Object list)
-    private List<Category> category;
-    private List<Category> country;
-
-    // --- Getters & Setters ---
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getOriginName() { return originName; }
-    public void setOriginName(String originName) { this.originName = originName; }
-
     public String getSlug() { return slug; }
-    public void setSlug(String slug) { this.slug = slug; }
-
-    public String getThumbUrl() { return thumbUrl; }
-    public void setThumbUrl(String thumbUrl) { this.thumbUrl = thumbUrl; }
-
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
-
+    public String getOriginName() { return originName; }
     public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
+    public String getTime() { return time; }
+    public String getContent() { return content; }
 
-    public List<Category> getCategory() { return category; }
-    public void setCategory(List<Category> category) { this.category = category; }
-
+    // [FIX] Getter
     public List<Category> getCountry() { return country; }
-    public void setCountry(List<Category> country) { this.country = country; }
+    public List<Category> getCategory() { return category; }
 
     public String getFullThumbUrl() {
-        if (thumbUrl != null && !thumbUrl.startsWith("http")) {
-            return "https://img.ophim1.com/uploads/movies/" + thumbUrl;
-        }
-        return thumbUrl;
+        if (thumbUrl != null && thumbUrl.startsWith("http")) return thumbUrl;
+        return "https://img.ophim.live/uploads/movies/" + thumbUrl;
     }
 
-    // Class phụ để hứng category/country
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Category {
-        public String name;
+        @JsonProperty("name") private String name;
         public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
     }
 }

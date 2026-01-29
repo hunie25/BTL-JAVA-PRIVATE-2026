@@ -119,7 +119,7 @@
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
-                 </Text>
+                </Text>
                 <StackPane prefHeight="30.0" prefWidth="250.0">
                     <children>
                         <ImageView fitHeight="10" fitWidth="10"
@@ -133,8 +133,8 @@
                         </ImageView>
 
                         <PasswordField fx:id="pfConfirmPassword"
-                                    promptText="123456"
-                                    opacity="0.5">
+                                       promptText="123456"
+                                       opacity="0.5">
                             <StackPane.margin>
                                 <Insets top="10"/>
                             </StackPane.margin>
@@ -144,8 +144,8 @@
                         </PasswordField>
 
                         <TextField fx:id="tfConfirmPassword"
-                                visible="false"
-                                 managed="false">
+                                   visible="false"
+                                   managed="false">
                             <StackPane.margin>
                                 <Insets top="10"/>
                             </StackPane.margin>
@@ -155,9 +155,9 @@
                         </TextField>
 
                         <ImageView fitHeight="15" fitWidth="18"
-                                StackPane.alignment="CENTER_RIGHT"
-                                onMouseClicked="#togglePassword"
-                                style="-fx-cursor: hand;">
+                                   StackPane.alignment="CENTER_RIGHT"
+                                   onMouseClicked="#toggleConfirmPassword"
+                                   style="-fx-cursor: hand;">
                             <StackPane.margin>
                                 <Insets right="10"/>
                             </StackPane.margin>

@@ -1,64 +1,118 @@
 package com.myapp.util;
 
+import com.myapp.controller.HomeController;
 import com.myapp.controller.WatchController;
 import com.myapp.model.Movie;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class SceneNavigator {
+    private static Stage primaryStage;
 
-    private static Stage mainStage;
+    // Lưu tham chiếu đến Controller hiện tại để tắt Timer khi cần
+    private static Object currentController;
 
-    // Các đường dẫn đến file FXML
-    public static final String HOME_FXML = "/fxml/home.fxml";
-    public static final String WATCH_FXML = "/fxml/watch.fxml";
-
-    /**
-     * Gọi hàm này ở MainApp để set Stage chính
-     */
-    public static void setMainStage(Stage stage) {
-        mainStage = stage;
+    public static void setPrimaryStage(Stage stage) {
+        primaryStage = stage;
     }
 
-    /**
-     * Chuyển về trang chủ
-     */
     public static void loadHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(HOME_FXML));
+            // 1. Dọn dẹp Controller cũ (nếu có)
+            cleanupCurrentController();
+
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource("/fxml/home.fxml"));
             Parent root = loader.load();
 
-            // Giữ nguyên kích thước cửa sổ hiện tại hoặc set lại nếu muốn
-            Scene scene = new Scene(root, mainStage.getScene().getWidth(), mainStage.getScene().getHeight());
-            mainStage.setScene(scene);
+            // 2. Lưu Controller mới
+            currentController = loader.getController();
 
+            Scene scene = new Scene(root);
+            scene.setFill(Color.web("#020617"));
+            primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            UiUtils.showError("Lỗi hệ thống", "Không thể tải trang chủ: " + e.getMessage());
         }
     }
 
-    /**
-     * Chuyển sang trang xem phim và truyền dữ liệu phim vào
-     */
     public static void loadWatchScene(Movie movie) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(WATCH_FXML));
+            // 1. Dọn dẹp Controller cũ (Dừng slide ảnh ở Home)
+            cleanupCurrentController();
+
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource("/fxml/watch.fxml"));
             Parent root = loader.load();
 
-            // Lấy controller của màn hình Watch để truyền dữ liệu phim
             WatchController controller = loader.getController();
-            controller.initData(movie); // Truyền object Movie vào để load tập phim
+            controller.initData(movie);
 
-            Scene scene = new Scene(root, mainStage.getScene().getWidth(), mainStage.getScene().getHeight());
-            mainStage.setScene(scene);
+            // 2. Lưu Controller mới
+            currentController = controller;
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.web("#020617"));
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadLogin() {
+        try {
+            cleanupCurrentController();
+
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource("/view/login.fxml"));
+            Parent root = loader.load();
+
+            currentController = loader.getController();
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void goResetPassword() {
+        try {
+            cleanupCurrentController();
+
+            FXMLLoader loader = new FXMLLoader(
+                    SceneNavigator.class.getResource("/view/resetPassword.fxml")
+            );
+            Parent root = loader.load();
+
+            currentController = loader.getController();
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
-            UiUtils.showError("Lỗi hệ thống", "Không thể mở trang xem phim: " + e.getMessage());
         }
+    }
+
+
+
+    // Hàm dọn dẹp quan trọng
+    private static void cleanupCurrentController() {
+        if (currentController instanceof HomeController) {
+            System.out.println("Stopping Home animations...");
+            ((HomeController) currentController).stopTimerLogic();
+        }
+        else if (currentController instanceof WatchController) {
+            // Nếu cần dừng video khi thoát màn hình Watch
+            // ((WatchController) currentController).stopVideo();
+        }
+        currentController = null;
     }
 }

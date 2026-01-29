@@ -1,11 +1,14 @@
 package com.myapp.controller;
 
+import com.myapp.util.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Node;
+
+import java.util.EventObject;
 
 
 public class LoginController {
@@ -47,24 +50,12 @@ public class LoginController {
     }
 
     @FXML
-    private void handleLogin() {
-        String username = txtUsername.getText().trim();
-        String password = isShowPassword
-                ? tfPassword.getText()
-                : pfPassword.getText();
+    private void handleLogin(javafx.event.ActionEvent event) {
+        // TODO: sau này check AuthService ở đây
 
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Vui lòng nhập đầy đủ thông tin");
-            return;
-        }
-
-        if (username.equals("admin") && password.equals("123456")) {
-            lblError.setVisible(false);
-            System.out.println("Đăng nhập thành công!");
-        } else {
-            showError("Sai tài khoản hoặc mật khẩu");
-        }
+        SceneNavigator.loadHome();
     }
+
 
     @FXML
     private void handleForgotPassword(javafx.event.ActionEvent event) {
