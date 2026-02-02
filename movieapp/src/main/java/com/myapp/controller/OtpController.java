@@ -35,7 +35,7 @@ public class OtpController {
 
     @FXML
     private void goToLogin() {
-        SceneNavigator.goLogin();
+        SceneNavigator.loadLogin();
     }
 
     private void showError(String message) {

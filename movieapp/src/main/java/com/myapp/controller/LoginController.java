@@ -1,5 +1,6 @@
 package com.myapp.controller;
 
+import com.myapp.util.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
@@ -50,22 +51,11 @@ public class LoginController {
 
     @FXML
     private void handleLogin(javafx.event.ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
+        // TODO: sau này check AuthService ở đây
 
-            Scene scene = new Scene(
-                    FXMLLoader.load(
-                            getClass().getResource("/fxml/home.fxml")
-                    )
-            );
-
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SceneNavigator.loadHome();
     }
+
 
     @FXML
     private void handleForgotPassword(javafx.event.ActionEvent event) {

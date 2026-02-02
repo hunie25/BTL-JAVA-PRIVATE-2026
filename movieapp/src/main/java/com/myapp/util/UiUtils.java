@@ -1,54 +1,58 @@
 package com.myapp.util;
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
-
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class UiUtils {
 
-    public static <T> void runAsync(Callable<T> backgroundTask, Consumer<T> uiUpdate) {
-        Task<T> task = new Task<>() {
-            @Override
-            protected T call() throws Exception {
-                return backgroundTask.call();
+    /**
+     * Chạy tác vụ nặng (như gọi API) dưới background thread,
+     * sau đó cập nhật kết quả lên giao diện (JavaFX Application Thread).
+     * * @param task      Tác vụ cần chạy (VD: movieService::getNewMovies)
+     * @param onSuccess Hàm xử lý kết quả khi thành công (VD: movies -> { ... })
+     * @param <T>       Kiểu dữ liệu trả về
+     */
+    public static <T> void runAsync(Callable<T> task, Consumer<T> onSuccess) {
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                return task.call();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
-        };
-
-        // Khi chạy xong thành công
-        task.setOnSucceeded(event -> {
-            T result = task.getValue();
-            // Platform.runLater đảm bảo code chạy trên luồng giao diện
-            Platform.runLater(() -> uiUpdate.accept(result));
+        }).thenAccept(result -> {
+            if (result != null) {
+                Platform.runLater(() -> onSuccess.accept(result));
+            }
         });
-
-        // Khi gặp lỗi
-        task.setOnFailed(event -> {
-            Throwable e = task.getException();
-            e.printStackTrace();
-            Platform.runLater(() -> showError("Lỗi tải dữ liệu", e.getMessage()));
-        });
-
-
-        new Thread(task).start();
     }
 
     /**
-     * Hiển thị thông báo lỗi đơn giản
+     * Hiển thị hộp thoại báo lỗi đơn giản.
      */
-    public static void showError(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.initModality(Modality.APPLICATION_MODAL);
+    public static void showError(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
 
-        // CSS cho Alert để nó không bị "lệch tông" so với Dark Mode của app
-        // (Yêu cầu bạn phải add file css vào DialogPane nếu muốn đẹp hoàn hảo)
-        alert.showAndWait();
+    /**
+     * Hiển thị hộp thoại thông báo (Info).
+     */
+    public static void showInfo(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 }
