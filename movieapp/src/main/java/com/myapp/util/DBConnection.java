@@ -11,8 +11,13 @@ public class DBConnection {
 
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(URL, USER, PASS);
+            // Nạp Driver thủ công để chắc chắn
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            System.out.println(">>> KẾT NỐI DATABASE THÀNH CÔNG!");
+            return conn;
         } catch (Exception e) {
+            System.err.println("!!! LỖI KẾT NỐI DATABASE: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
