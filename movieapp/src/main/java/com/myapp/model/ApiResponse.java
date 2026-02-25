@@ -2,19 +2,24 @@ package com.myapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
-// Hứng response danh sách phim (Home)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiResponse {
-    @JsonProperty("status") private boolean status;
-    @JsonProperty("items") private List<Movie> items;
-    @JsonProperty("pathImage") private String pathImage;
+public class ApiResponse<T> {
 
-    public boolean isStatus() { return status; }
-    public void setStatus(boolean status) { this.status = status; }
-    public List<Movie> getItems() { return items; }
-    public void setItems(List<Movie> items) { this.items = items; }
-    public String getPathImage() { return pathImage; }
-    public void setPathImage(String pathImage) { this.pathImage = pathImage; }
+    @JsonProperty("status")
+    private String status; // "success" / "error"
+
+    @JsonProperty("message")
+    private String message;
+
+    @JsonProperty("data")
+    private T data;
+
+    public String getStatus() { return status; }
+    public String getMessage() { return message; }
+    public T getData() { return data; }
+
+    public boolean isSuccess() {
+        return status != null && status.equalsIgnoreCase("success");
+    }
 }
