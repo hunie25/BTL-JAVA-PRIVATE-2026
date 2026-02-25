@@ -2,20 +2,37 @@ package com.myapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieResponse {
-    @JsonProperty("status") private boolean status;
-    @JsonProperty("movie") private Movie movie; // Dùng Movie (vì đã thêm đủ trường ở trên)
-    @JsonProperty("episodes") private List<Episode> episodes;
 
-    public boolean isStatus() { return status; }
-    public void setStatus(boolean status) { this.status = status; }
+    @JsonProperty("status")
+    private String status;
 
-    public Movie getMovie() { return movie; }
-    public void setMovie(Movie movie) { this.movie = movie; }
+    @JsonProperty("message")
+    private String message;
 
-    public List<Episode> getEpisodes() { return episodes; }
-    public void setEpisodes(List<Episode> episodes) { this.episodes = episodes; }
+    @JsonProperty("data")
+    private Data data;
+
+    public String getStatus() { return status; }
+    public String getMessage() { return message; }
+    public Data getData() { return data; }
+
+    public boolean isSuccess() {
+        return status != null && status.equalsIgnoreCase("success");
+    }
+
+    // tiện cho code cũ gọi response.getMovie()
+    public Movie getMovie() {
+        return data != null ? data.item : null;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Data {
+        @JsonProperty("item")
+        private Movie item;
+
+        public Movie getItem() { return item; }
+    }
 }
