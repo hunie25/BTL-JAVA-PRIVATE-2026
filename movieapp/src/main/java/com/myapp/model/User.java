@@ -28,7 +28,7 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.verified = true; // giả định verified cho dữ liệu cũ
+        this.verified = true;
     }
 
     public User(int id, String username, String password) {

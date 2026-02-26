@@ -132,8 +132,7 @@ public class UserDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            System.out.println("DEBUG: Đang update cho email: '" + email + "'"); // In ra để xem có bị null hay dư dấu cách không
-
+            System.out.println("DEBUG: Đang update cho email: '" + email + "'");
             stmt.setString(1, newPassword);
             stmt.setString(2, email);
 

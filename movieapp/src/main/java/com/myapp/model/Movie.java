@@ -2,72 +2,129 @@ package com.myapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie {
+
+    @JsonProperty("_id")
+    private String id;
+
+    @JsonProperty("name")
     private String name;
 
     @JsonProperty("origin_name")
-    private String originName; // Tên tiếng Anh
+    private String originName;
 
+    @JsonProperty("slug")
     private String slug;
 
     @JsonProperty("thumb_url")
     private String thumbUrl;
 
+    @JsonProperty("poster_url")
+    private String posterUrl;
+
     @JsonProperty("content")
     private String content;
 
     @JsonProperty("time")
-    private String time; // Thời lượng
+    private String time;
 
-    private int year;
+    @JsonProperty("year")
+    private Integer year;
 
-    // Danh sách thể loại và quốc gia (API trả về dạng Object list)
-    private List<Category> category;
-    private List<Category> country;
+    @JsonProperty("quality")
+    private String quality;
 
-    // --- Getters & Setters ---
+    @JsonProperty("lang")
+    private String lang;
+
+    @JsonProperty("episode_current")
+    private String episodeCurrent;
+
+    @JsonProperty("episode_total")
+    private String episodeTotal;
+
+    @JsonProperty("type")
+    private String type;
+
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("category")
+    private List<Taxonomy> category = new ArrayList<>();
+
+    @JsonProperty("country")
+    private List<Taxonomy> country = new ArrayList<>();
+
+    @JsonProperty("episodes")
+    private List<Episode> episodes = new ArrayList<>();
+
+    // ===== Getters =====
+    public String getId() { return id; }
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getOriginName() { return originName; }
-    public void setOriginName(String originName) { this.originName = originName; }
-
     public String getSlug() { return slug; }
-    public void setSlug(String slug) { this.slug = slug; }
-
     public String getThumbUrl() { return thumbUrl; }
-    public void setThumbUrl(String thumbUrl) { this.thumbUrl = thumbUrl; }
-
+    public String getPosterUrl() { return posterUrl; }
     public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
     public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
+    public Integer getYear() { return year; }
+    public String getQuality() { return quality; }
+    public String getLang() { return lang; }
+    public String getEpisodeCurrent() { return episodeCurrent; }
+    public String getEpisodeTotal() { return episodeTotal; }
+    public String getType() { return type; }
+    public String getStatus() { return status; }
+    public List<Taxonomy> getCategory() { return category; }
+    public List<Taxonomy> getCountry() { return country; }
+    public List<Episode> getEpisodes() { return episodes; }
 
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
-
-    public List<Category> getCategory() { return category; }
-    public void setCategory(List<Category> category) { this.category = category; }
-
-    public List<Category> getCountry() { return country; }
-    public void setCountry(List<Category> country) { this.country = country; }
-
+    // ===== URL helpers (tương thích nhiều kiểu trả về) =====
     public String getFullThumbUrl() {
-        if (thumbUrl != null && !thumbUrl.startsWith("http")) {
-            return "https://img.ophim1.com/uploads/movies/" + thumbUrl;
-        }
-        return thumbUrl;
+        return toFullImageUrl(thumbUrl);
     }
 
-    // Class phụ để hứng category/country
+    public String getFullPosterUrl() {
+        return toFullImageUrl(posterUrl);
+    }
+
+    private String toFullImageUrl(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String v = raw.trim();
+
+        if (v.startsWith("http://") || v.startsWith("https://")) return v;
+
+        // Nếu API trả path đầy đủ kiểu /uploads/movies/xxx.jpg
+        if (v.startsWith("/uploads/")) {
+            return "https://ophim1.com" + v;
+        }
+
+        // Nếu API trả /thumb.jpg /poster.jpg (thường ở endpoint chi tiết)
+        if (v.startsWith("/")) {
+            return "https://img.ophim.cc/uploads/movies" + v;
+        }
+
+        // Nếu API trả tên file trần
+        return "https://img.ophim.cc/uploads/movies/" + v;
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Category {
-        public String name;
+    public static class Taxonomy {
+        @JsonProperty("id")
+        private String id;
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("slug")
+        private String slug;
+
+        public String getId() { return id; }
         public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
+        public String getSlug() { return slug; }
     }
 }

@@ -3,20 +3,46 @@ package com.myapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Episode {
-    private String name;
-    private String slug;
 
-    @JsonProperty("link_m3u8") // Map chính xác key này
-    private String linkM3u8;
+    @JsonProperty("server_name")
+    private String serverName;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    @JsonProperty("is_ai")
+    private Boolean isAi;
 
-    public String getSlug() { return slug; }
-    public void setSlug(String slug) { this.slug = slug; }
+    @JsonProperty("server_data")
+    private List<ServerData> serverData = new ArrayList<>();
 
-    public String getLinkM3u8() { return linkM3u8; }
-    public void setLinkM3u8(String linkM3u8) { this.linkM3u8 = linkM3u8; }
+    public String getServerName() { return serverName; }
+    public Boolean getIsAi() { return isAi; }
+    public List<ServerData> getServerData() { return serverData; }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ServerData {
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("slug")
+        private String slug;
+
+        @JsonProperty("filename")
+        private String filename;
+
+        @JsonProperty("link_embed")
+        private String linkEmbed;
+
+        @JsonProperty("link_m3u8")
+        private String linkM3u8;
+
+        public String getName() { return name; }
+        public String getSlug() { return slug; }
+        public String getFilename() { return filename; }
+        public String getLinkEmbed() { return linkEmbed; }
+        public String getLinkM3u8() { return linkM3u8; }
+    }
 }

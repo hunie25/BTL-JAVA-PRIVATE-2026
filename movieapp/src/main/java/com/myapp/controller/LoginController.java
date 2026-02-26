@@ -7,7 +7,7 @@ import com.myapp.util.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.myapp.dao.UserDAO; // Import để lấy object User nếu cần
+import com.myapp.dao.UserDAO;
 
 public class LoginController {
 

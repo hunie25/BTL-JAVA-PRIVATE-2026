@@ -18,12 +18,12 @@ public class MainApp extends Application {
         primaryStage.setTitle("OPhim Hub");
         primaryStage.setWidth(375);
         primaryStage.setHeight(812);
-        primaryStage.setResizable(false); // QUAN TRỌNG
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch(args); // Không cần dòng System.setProperty nữa
+        launch(args);
     }
 }

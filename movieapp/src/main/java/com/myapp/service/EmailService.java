@@ -57,7 +57,6 @@ public class EmailService {
         }
     }
 
-    // Thêm hàm này vào EmailService
     public void sendOtpForReset(String toEmail, String otp) {
         String subject = "Mã OTP đặt lại mật khẩu";
         String content = "Mã xác nhận để đặt lại mật khẩu của bạn là: " + otp +

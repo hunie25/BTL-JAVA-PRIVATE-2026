@@ -81,13 +81,9 @@ public class SceneNavigator {
         }
     }
 
-    /* ===================== HOME ===================== */
-
     public static void loadHome() {
         switchScene(HOME_FXML);
     }
-
-    /* ===================== WATCH ===================== */
 
     public static void loadWatchScene(Movie movie) {
         try {
