@@ -1,96 +1,85 @@
 package com.myapp.controller;
 
+import com.myapp.model.User;
+import com.myapp.service.AuthService;
 import com.myapp.util.SceneNavigator;
+import com.myapp.util.SessionManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-
-import java.util.EventObject;
-
+import com.myapp.dao.UserDAO;
 
 public class LoginController {
 
-    @FXML
-    private TextField txtUsername;
+    @FXML private TextField txtUsername;
+    @FXML private PasswordField pfPassword;
+    @FXML private TextField tfPassword;
+    @FXML private Label lblError;
 
-    @FXML
-    private PasswordField pfPassword;
-
-    @FXML
-    private TextField tfPassword;
-
-    @FXML
-    private Label lblError;
-
+    private final AuthService authService = new AuthService();
+    private final UserDAO userDAO = new UserDAO();
     private boolean isShowPassword = false;
 
     @FXML
+    public void initialize() {
+        lblError.setVisible(false);
+        tfPassword.textProperty().bindBidirectional(pfPassword.textProperty());//đồng bộ ẩn hiện mật khẩu
+        txtUsername.setOnAction(e -> handleLogin(null));
+        pfPassword.setOnAction(e -> handleLogin(null));
+        tfPassword.setOnAction(e -> handleLogin(null));
+    }
+
+    @FXML
     private void togglePassword() {
-
         if (isShowPassword) {
-            pfPassword.setText(tfPassword.getText());
-            pfPassword.setVisible(true);
-            pfPassword.setManaged(true);
-
-            tfPassword.setVisible(false);
-            tfPassword.setManaged(false);
+            showField(pfPassword, tfPassword);
         } else {
-            tfPassword.setText(pfPassword.getText());
-            tfPassword.setVisible(true);
-            tfPassword.setManaged(true);
-
-            pfPassword.setVisible(false);
-            pfPassword.setManaged(false);
+            showField(tfPassword, pfPassword);
         }
-
         isShowPassword = !isShowPassword;
     }
 
-    @FXML
-    private void handleLogin(javafx.event.ActionEvent event) {
-        // TODO: sau này check AuthService ở đây
-
-        SceneNavigator.loadHome();
+    private void showField(Control show, Control hide) {
+        show.setVisible(true);
+        show.setManaged(true);
+        hide.setVisible(false);
+        hide.setManaged(false);
+        show.requestFocus();
     }
 
-
     @FXML
-    private void handleForgotPassword(javafx.event.ActionEvent event) {
+    private void handleLogin(ActionEvent event) {
+        lblError.setVisible(false);
+        String username = txtUsername.getText().trim();
+        String password = pfPassword.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            showError("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
         try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
+            User user = authService.login(username, password);
 
-            Scene scene = new Scene(
-                    FXMLLoader.load(
-                            getClass().getResource("/view/forgotPassword.fxml")
-                    )
-            );
-
-            stage.setScene(scene);
-            stage.show();
+            if (user != null) {
+                SessionManager.setUser(user);
+                SceneNavigator.loadHome();
+            } else {
+                showError("Sai tài khoản, mật khẩu hoặc chưa xác minh Email!");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            showError(e.getMessage());
         }
     }
 
+    @FXML
+    private void handleForgotPassword(ActionEvent event) {
+        SceneNavigator.goForgotPassword();
+    }
 
     @FXML
-    private void goToRegister(javafx.event.ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
-
-            Scene scene = new Scene(
-                    FXMLLoader.load(getClass().getResource("/view/register.fxml"))
-            );
-
-            stage.setScene(scene);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void goToRegister(ActionEvent event) {
+        SceneNavigator.goRegister();
     }
 
     private void showError(String message) {

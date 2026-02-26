@@ -2,106 +2,87 @@ package com.myapp.controller;
 
 import com.myapp.exception.RegisterException;
 import com.myapp.service.AuthService;
+import com.myapp.util.SceneNavigator;
+import com.myapp.util.SessionManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
 import javafx.event.ActionEvent;
 
 public class RegisterController {
-    @FXML
-    private TextField txtUsername;
-
-    @FXML
-    private PasswordField pfPassword;
-    @FXML
-    private TextField tfPassword;
-
-    @FXML
-    private PasswordField pfConfirmPassword;
-    @FXML
-    private TextField tfConfirmPassword;
-
-    @FXML
-    private Label lblError;
-    @FXML
-    private Button btnRegister;
-    @FXML
-    private Hyperlink linkLogin;
+    @FXML private TextField txtUsername, txtEmail;
+    @FXML private PasswordField pfPassword, pfConfirmPassword;
+    @FXML private TextField tfPassword, tfConfirmPassword;
+    @FXML private Label lblError;
 
     private final AuthService authService = new AuthService();
+
     @FXML
-    private void handleRegister() {
+    public void initialize() {
         lblError.setVisible(false);
-
-        String username = txtUsername.getText().trim();
-        String password = pfPassword.isVisible()
-                ? pfPassword.getText()
-                : tfPassword.getText();
-
-        String confirmPassword = pfConfirmPassword.isVisible()
-                ? pfConfirmPassword.getText()
-                : tfConfirmPassword.getText();
-
-        try {
-            authService.register(username, password, confirmPassword);
-            goToLogin(null);
-        } catch (RegisterException e) {
-            showError(e.getMessage());
-        } catch (Exception e) {
-            showError("Có lỗi xảy ra, vui lòng thử lại!");
-            e.printStackTrace();
-        }
+        tfPassword.textProperty().bindBidirectional(pfPassword.textProperty());
+        tfConfirmPassword.textProperty().bindBidirectional(pfConfirmPassword.textProperty());
+        txtUsername.setOnAction(e -> handleRegister());
+        txtEmail.setOnAction(e -> handleRegister());
+        pfPassword.setOnAction(e -> handleRegister());
     }
+
+        @FXML
+        private void handleRegister() {
+            lblError.setVisible(false);
+
+            String username = txtUsername.getText().trim();
+            String email = txtEmail.getText().trim();
+            String password = pfPassword.getText();
+            String confirmPassword = pfConfirmPassword.getText();
+
+            try {
+                authService.register(username, email, password, confirmPassword);
+                showSuccessAlert("Đăng ký thành công!");
+                SceneNavigator.goLogin();
+
+            } catch (RegisterException e) {
+                showError(e.getMessage());
+            } catch (Exception e) {
+                showError("Lỗi hệ thống khi đăng ký, vui lòng thử lại!");
+                e.printStackTrace();
+            }
+        }
 
     @FXML
     private void togglePassword() {
-        toggle(pfPassword, tfPassword);
+        toggleVisibility(pfPassword, tfPassword);
     }
 
     @FXML
     private void toggleConfirmPassword() {
-        toggle(pfConfirmPassword, tfConfirmPassword);
+        toggleVisibility(pfConfirmPassword, tfConfirmPassword);
     }
 
-    private void toggle(PasswordField pf, TextField tf) {
-        if (pf.isVisible()) {
-            tf.setText(pf.getText());
-            tf.setVisible(true);
-            tf.setManaged(true);
-            pf.setVisible(false);
-            pf.setManaged(false);
-        } else {
-            pf.setText(tf.getText());
-            pf.setVisible(true);
-            pf.setManaged(true);
-            tf.setVisible(false);
-            tf.setManaged(false);
-        }
+    private void toggleVisibility(PasswordField pf, TextField tf) {
+        boolean isVisible = pf.isVisible();
+        pf.setVisible(!isVisible);
+        pf.setManaged(!isVisible);
+        tf.setVisible(isVisible);
+        tf.setManaged(isVisible);
+
+        if (isVisible) tf.requestFocus(); else pf.requestFocus();
     }
 
     @FXML
     private void goToLogin(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
-
-            stage.setScene(new Scene(
-                    FXMLLoader.load(getClass().getResource("/view/login.fxml"))
-            ));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SceneNavigator.goLogin();
     }
-
 
     private void showError(String message) {
         lblError.setText(message);
         lblError.setVisible(true);
+    }
+
+    private void showSuccessAlert(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="335.0"
+<AnchorPane prefHeight="600.0" prefWidth="350.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.myapp.controller.OtpController"
@@ -20,54 +20,40 @@
             style="-fx-background-color: #0D1117;">
 
     <children>
-
-        <ImageView fitHeight="104" fitWidth="144" layoutX="95" layoutY="50">
-            <image>
-                <Image url="@../images/logo.jpg"/>
-            </image>
-        </ImageView>
-
-        <Text layoutX="75" layoutY="185" fill="DARKORANGE" text="NHẬP MÃ OTP">
-            <font>
-                <Font size="22"/>
-            </font>
-        </Text>
-
-        <Text layoutX="40" layoutY="210"
-              fill="#8b949e"
-              text="Vui lòng kiểm tra email và nhập mã OTP"/>
-
-        <VBox layoutX="42" layoutY="260" prefWidth="250" spacing="10">
+        <VBox alignment="TOP_CENTER" spacing="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="60.0">
             <children>
-                <Text fill="#8b949e" text="Mã OTP"/>
+                <VBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <ImageView fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/logo.png" />
+                            </image>
+                        </ImageView>
+                        <Text fill="#00B4D8" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,180,216,0.6), 15, 0, 0, 0);" text="XÁC MINH OTP">
+                            <font>
+                                <Font name="System Bold" size="26.0" />
+                            </font>
+                        </Text>
+                        <Label fx:id="lblMessage" alignment="CENTER" prefWidth="270.0" text="Vui lòng kiểm tra email và nhập mã OTP" textAlignment="CENTER" wrapText="true" style="-fx-text-fill: #8b949e;" />
+                    </children>
+                </VBox>
 
-                <TextField fx:id="txtOtp"
-                           promptText="Nhập 6 chữ số"
-                           opacity="0.6"/>
+                <VBox spacing="8.0">
+                    <children>
+                        <Label text="Mã xác thực" style="-fx-text-fill: #8b949e;" />
+                        <TextField fx:id="txtOtp" alignment="CENTER" prefHeight="45.0" promptText="Nhập 6 chữ số" styleClass="otp-field" />
+                    </children>
+                </VBox>
+
+                <Label fx:id="lblError" alignment="CENTER" maxWidth="1.7976931348623157E308" textFill="#ff4d4d" visible="false" wrapText="true" />
+
+                <VBox alignment="CENTER" spacing="15.0">
+                    <children>
+                        <Button fx:id="btnVerify" onAction="#handleVerifyOtp" prefHeight="45.0" prefWidth="300.0" styleClass="btn-primary" text="XÁC NHẬN" />
+                        <Hyperlink onAction="#goToLogin" style="-fx-text-fill: #00B4D8; -fx-font-weight: bold;" text="Quay lại đăng nhập" />
+                    </children>
+                </VBox>
             </children>
         </VBox>
-
-        <Button layoutX="58"
-                layoutY="340"
-                prefWidth="218"
-                text="XÁC NHẬN OTP"
-                style="-fx-background-radius: 20; -fx-background-color: #ff8c00;"
-                onAction="#handleVerifyOtp"/>
-
-        <Label fx:id="lblError"
-               layoutX="42"
-               layoutY="305"
-               prefWidth="250"
-               textFill="RED"
-               visible="false"
-               wrapText="true"
-               alignment="CENTER"/>
-
-        <Hyperlink layoutX="80"
-                   layoutY="400"
-                   text="Quay lại đăng nhập"
-                   onAction="#goToLogin"
-                   style="-fx-text-fill: #8b949e;"/>
-
     </children>
 </AnchorPane>
