@@ -19,12 +19,8 @@ public class RegisterController {
     @FXML
     public void initialize() {
         lblError.setVisible(false);
-
-        // Ràng buộc dữ liệu 2 chiều giữa trường ẩn và hiện mật khẩu
         tfPassword.textProperty().bindBidirectional(pfPassword.textProperty());
         tfConfirmPassword.textProperty().bindBidirectional(pfConfirmPassword.textProperty());
-
-        // Hỗ trợ nhấn Enter để đăng ký nhanh
         txtUsername.setOnAction(e -> handleRegister());
         txtEmail.setOnAction(e -> handleRegister());
         pfPassword.setOnAction(e -> handleRegister());
@@ -41,8 +37,8 @@ public class RegisterController {
 
             try {
                 authService.register(username, email, password, confirmPassword);
-                SessionManager.set("REGISTER_EMAIL", email);
-                SceneNavigator.goOtp();
+                showSuccessAlert("Đăng ký thành công!");
+                SceneNavigator.goLogin();
 
             } catch (RegisterException e) {
                 showError(e.getMessage());
@@ -62,9 +58,6 @@ public class RegisterController {
         toggleVisibility(pfConfirmPassword, tfConfirmPassword);
     }
 
-    /**
-     * Hàm dùng chung để ẩn/hiện mật khẩu
-     */
     private void toggleVisibility(PasswordField pf, TextField tf) {
         boolean isVisible = pf.isVisible();
         pf.setVisible(!isVisible);
@@ -83,5 +76,13 @@ public class RegisterController {
     private void showError(String message) {
         lblError.setText(message);
         lblError.setVisible(true);
+    }
+
+    private void showSuccessAlert(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

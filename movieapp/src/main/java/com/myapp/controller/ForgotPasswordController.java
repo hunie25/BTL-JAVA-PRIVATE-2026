@@ -1,6 +1,7 @@
 package com.myapp.controller;
 
 import com.myapp.exception.ForgotPasswordException;
+import com.myapp.service.AuthService;
 import com.myapp.service.OtpService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,61 +21,70 @@ public class ForgotPasswordController {
     private Label lblError;
 
     private final OtpService otpService = new OtpService();
+    private final AuthService authService = new AuthService();
 
     @FXML
     private void handleSendOtp(ActionEvent event) {
-        lblError.setVisible(false);
+        resetError();
+        String email = txtEmail.getText().trim();
+
+        if (email.isEmpty()) {
+            showError("Vui lòng nhập Email!");
+            return;
+        }
+
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        if (!java.util.regex.Pattern.matches(emailRegex, email)) {
+            showError("Email không hợp lệ (Ví dụ: abc@gmail.com)!");
+            txtEmail.getStyleClass().add("input-field-error");
+            return;
+        }
 
         try {
-            String email = txtEmail.getText().trim();
+            if (!authService.isEmailExists(email)) {
+                showError("Email này chưa được đăng ký trong hệ thống!");
+                return;
+            }
+            com.myapp.util.SessionManager.set("RESET_EMAIL", email);
             otpService.sendOtp(email);
             goToOtpScreen(event);
 
-        } catch (ForgotPasswordException e) {
-            showError(e.getMessage());
         } catch (Exception e) {
-            showError("Có lỗi hệ thống, vui lòng thử lại sau");
+            showError("Lỗi: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    private void showError(String message) {
+        lblError.setText(message);
+        lblError.setVisible(true);
+        lblError.setManaged(true);
+        txtEmail.getStyleClass().add("input-field-error");
+    }
+
+    private void resetError() {
+        lblError.setVisible(false);
+        lblError.setManaged(false);
+        txtEmail.getStyleClass().remove("input-field-error");
     }
 
     @FXML
     private void goToLogin(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
-
-            Scene scene = new Scene(
-                    FXMLLoader.load(getClass().getResource("/view/login.fxml"))
-            );
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchScene(event, "/view/login.fxml");
     }
 
     private void goToOtpScreen(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource())
-                    .getScene().getWindow();
-
-            Scene scene = new Scene(
-                    FXMLLoader.load(getClass().getResource("/view/otp.fxml"))
-            );
-
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchScene(event, "/view/otp.fxml");
     }
 
-
-    private void showError(String message) {
-        lblError.setText(message);
-        lblError.setVisible(true);
+    private void switchScene(ActionEvent event, String fxmlPath) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(FXMLLoader.load(getClass().getResource(fxmlPath)));
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Không thể chuyển trang, vui lòng kiểm tra file FXML!");
+        }
     }
 }

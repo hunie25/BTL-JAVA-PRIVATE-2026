@@ -1,209 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="335.0"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="650.0" prefWidth="350.0" style="-fx-background-color: #0D1117;"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.myapp.controller.RegisterController"
-            stylesheets="@../css/style.css"
-            style="-fx-background-color: #0D1117;">
-
+            stylesheets="@../css/style.css">
     <children>
-        <ImageView fitHeight="104.0" fitWidth="144.0" layoutX="110.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../images/logo.png" />
-            </image>
-        </ImageView>
-        <Text fill="DARKORANGE" layoutX="97.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(gaussian, rgba(255,140,0,0.8), 15, 0.4, 0, 0;" text="HUB FILMS">
-            <font>
-                <Font name="Arial Rounded MT Bold" size="25.0" />
-            </font>
-        </Text>
-        <Text fill="#8b949e" layoutX="97.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tạo tài khoản mới" />
-        <VBox layoutX="42.0" layoutY="220.0" prefHeight="230.0" prefWidth="250.0">
+        <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
             <children>
-                <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Tên đăng nhập">
-                    <VBox.margin>
-                        <Insets top="5.0" />
-                    </VBox.margin>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Text>
-                <StackPane prefHeight="21.0" prefWidth="250.0">
+                <VBox alignment="CENTER" spacing="10.0">
                     <children>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
-                            <image>
-                                <Image url="@../images/user.png" />
-                            </image>
+                        <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../images/logo.png" /></image>
                         </ImageView>
-                        <TextField fx:id="txtUsername" opacity="0.5" promptText="user123">
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </TextField>
+                        <Text fill="#00B4D8" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,180,216,0.6), 15, 0.4, 0, 0);" text="HUB FILMS">
+                            <font><Font name="System Bold" size="28.0" /></font>
+                        </Text>
+                        <Text fill="#8b949e" text="Tạo tài khoản mới" />
                     </children>
-                </StackPane>
-                <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Email">
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Text>
-                <StackPane prefHeight="21.0" prefWidth="250.0">
+                </VBox>
+
+                <VBox spacing="15.0">
                     <children>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
-                            <image>
-                                <Image url="@../images/user.png" />
-                            </image>
-                        </ImageView>
-                        <TextField fx:id="txtEmail" opacity="0.5" promptText="user@gmail.com">
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </TextField>
+                        <VBox spacing="5.0">
+                            <Label text="Tên đăng nhập" textFill="#8b949e" />
+                            <StackPane alignment="CENTER_LEFT">
+                                <TextField fx:id="txtUsername" prefHeight="40.0" promptText="username123" styleClass="input-field" />
+                                <ImageView fitHeight="50.0" fitWidth="50.0" opacity="0.6">
+                                    <StackPane.margin><Insets left="0" /></StackPane.margin>
+                                    <Image url="@../images/user.png" />
+                                </ImageView>
+                            </StackPane>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Email" textFill="#8b949e" />
+                            <StackPane alignment="CENTER_LEFT">
+                                <TextField fx:id="txtEmail" prefHeight="40.0" promptText="user@gmail.com" styleClass="input-field" />
+                                <ImageView fitHeight="18.0" fitWidth="18.0" opacity="0.6">
+                                    <StackPane.margin><Insets left="12.0" /></StackPane.margin>
+                                    <Image url="@../images/email.png" />
+                                </ImageView>
+                            </StackPane>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Mật khẩu" textFill="#8b949e" />
+                            <StackPane alignment="CENTER_LEFT">
+                                <PasswordField fx:id="pfPassword" prefHeight="40.0" styleClass="input-field" />
+                                <TextField fx:id="tfPassword" managed="false" visible="false" prefHeight="40.0" styleClass="input-field" />
+                                <ImageView fitHeight="16.0" fitWidth="16.0" opacity="0.6">
+                                    <StackPane.margin><Insets left="12.0" /></StackPane.margin>
+                                    <Image url="@../images/lock.png" />
+                                </ImageView>
+                                <ImageView fitHeight="18.0" fitWidth="18.0" onMouseClicked="#togglePassword" style="-fx-cursor: hand;" StackPane.alignment="CENTER_RIGHT">
+                                    <StackPane.margin><Insets right="12.0" /></StackPane.margin>
+                                    <Image url="@../images/eye.png" />
+                                </ImageView>
+                            </StackPane>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Xác nhận mật khẩu" textFill="#8b949e" />
+                            <StackPane alignment="CENTER_LEFT">
+                                <PasswordField fx:id="pfConfirmPassword" prefHeight="40.0" styleClass="input-field" />
+                                <TextField fx:id="tfConfirmPassword" managed="false" visible="false" prefHeight="40.0" styleClass="input-field" />
+                                <ImageView fitHeight="16.0" fitWidth="16.0" opacity="0.6">
+                                    <StackPane.margin><Insets left="12.0" /></StackPane.margin>
+                                    <Image url="@../images/lock.png" />
+                                </ImageView>
+                                <ImageView fitHeight="18.0" fitWidth="18.0" onMouseClicked="#toggleConfirmPassword" style="-fx-cursor: hand;" StackPane.alignment="CENTER_RIGHT">
+                                    <StackPane.margin><Insets right="12.0" /></StackPane.margin>
+                                    <Image url="@../images/eye.png" />
+                                </ImageView>
+                            </StackPane>
+                        </VBox>
                     </children>
-                </StackPane>
-                <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Mật khẩu">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                </Text>
-                <StackPane prefHeight="30.0" prefWidth="250.0">
-                    <children>
-                        <ImageView fitHeight="10" fitWidth="10"
-                                   StackPane.alignment="CENTER_LEFT">
-                            <StackPane.margin>
-                                <Insets left="10"/>
-                            </StackPane.margin>
-                            <image>
-                                <Image url="@../images/lock.png"/>
-                            </image>
-                        </ImageView>
+                </VBox>
 
-                        <PasswordField fx:id="pfPassword"
-                                       promptText="123456"
-                                       opacity="0.5">
-                            <StackPane.margin>
-                                <Insets top="10"/>
-                            </StackPane.margin>
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </PasswordField>
+                <Label fx:id="lblError" alignment="CENTER" maxWidth="1.7976931348623157E308" textFill="#ff4d4d" visible="false" wrapText="true" />
 
-                        <TextField fx:id="tfPassword"
-                                   visible="false"
-                                   managed="false">
-                            <StackPane.margin>
-                                <Insets top="10"/>
-                            </StackPane.margin>
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </TextField>
+                <Button fx:id="btnRegister" onAction="#handleRegister" prefHeight="45.0" prefWidth="300.0" styleClass="btn-primary" text="ĐĂNG KÝ NGAY">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Button>
 
-                        <ImageView fitHeight="15" fitWidth="18"
-                                   StackPane.alignment="CENTER_RIGHT"
-                                   onMouseClicked="#togglePassword"
-                                   style="-fx-cursor: hand;">
-                            <StackPane.margin>
-                                <Insets right="10"/>
-                            </StackPane.margin>
-                            <image>
-                                <Image url="@../images/eye.png"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </StackPane>
-                <Text fill="#8b949e" strokeType="OUTSIDE" strokeWidth="0.0" text=" Xác nhận lại mật khẩu">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                 </Text>
-                <StackPane prefHeight="30.0" prefWidth="250.0">
-                    <children>
-                        <ImageView fitHeight="10" fitWidth="10"
-                                   StackPane.alignment="CENTER_LEFT">
-                            <StackPane.margin>
-                                <Insets left="10"/>
-                            </StackPane.margin>
-                            <image>
-                                <Image url="@../images/lock.png"/>
-                            </image>
-                        </ImageView>
-
-                        <PasswordField fx:id="pfConfirmPassword"
-                                    promptText="123456"
-                                    opacity="0.5">
-                            <StackPane.margin>
-                                <Insets top="10"/>
-                            </StackPane.margin>
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </PasswordField>
-
-                        <TextField fx:id="tfConfirmPassword"
-                                visible="false"
-                                 managed="false">
-                            <StackPane.margin>
-                                <Insets top="10"/>
-                            </StackPane.margin>
-                            <padding>
-                                <Insets left="20" right="20"/>
-                            </padding>
-                        </TextField>
-
-                        <ImageView fitHeight="15" fitWidth="18"
-                                StackPane.alignment="CENTER_RIGHT"
-                                onMouseClicked="#toggleConfirmPassword"
-                                style="-fx-cursor: hand;">
-                            <StackPane.margin>
-                                <Insets right="10"/>
-                            </StackPane.margin>
-                            <image>
-                                <Image url="@../images/eye.png"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </StackPane>
+                <Hyperlink onAction="#goToLogin" style="-fx-text-fill: #00B4D8; -fx-font-weight: bold;" text="Đã có tài khoản? Đăng nhập" />
             </children>
         </VBox>
-        <Button fx:id="btnRegister"  alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="480.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" style="-fx-background-radius: 20; -fx-background-color: #ff8c00;" text="ĐĂNG KÝ" onAction="#handleRegister" textAlignment="CENTER">
-            <font>
-                <Font name="Arial Hebrew Scholar Bold" size="15.0" />
-            </font>
-        </Button>
-        <Hyperlink fx:id="linkLogin" onAction="#goToLogin" styleClass="linkRegister" layoutX="97.0" layoutY="520.0" style="-fx-text-fill: #8b949e;" text="Quay lại trang đăng nhập" />
-        <Label fx:id="lblError"
-               layoutX="40"
-               layoutY="455"
-               prefWidth="280"
-               textFill="RED"
-               visible="false"
-               wrapText="true"
-               alignment="CENTER"/>
     </children>
 </AnchorPane>

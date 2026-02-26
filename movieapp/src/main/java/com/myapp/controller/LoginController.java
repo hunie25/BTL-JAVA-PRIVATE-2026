@@ -59,7 +59,6 @@ public class LoginController {
         }
 
         try {
-            // Gọi login và nhận về đối tượng User đã được kiểm tra verified = 1
             User user = authService.login(username, password);
 
             if (user != null) {
@@ -69,7 +68,6 @@ public class LoginController {
                 showError("Sai tài khoản, mật khẩu hoặc chưa xác minh Email!");
             }
         } catch (Exception e) {
-            // Hiển thị thông báo lỗi cụ thể (ví dụ: "Tài khoản chưa kích hoạt")
             showError(e.getMessage());
         }
     }

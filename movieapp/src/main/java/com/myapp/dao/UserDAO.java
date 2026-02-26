@@ -120,10 +120,30 @@ public class UserDAO {
             stmt.setString(2, email);
 
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0; // Trả về true nếu thực sự có dòng được cập nhật
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Trả về false nếu lỗi
+            return false;
+        }
+    }
+
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            System.out.println("DEBUG: Đang update cho email: '" + email + "'"); // In ra để xem có bị null hay dư dấu cách không
+
+            stmt.setString(1, newPassword);
+            stmt.setString(2, email);
+
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("DEBUG: Số dòng bị tác động: " + rowsAffected);
+
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

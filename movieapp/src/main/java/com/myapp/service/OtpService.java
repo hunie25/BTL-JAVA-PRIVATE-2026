@@ -68,8 +68,6 @@ public class OtpService {
         if (email == null) {
             throw new ForgotPasswordException("Phiên làm việc đã hết hạn");
         }
-
-        // Xóa OTP sau khi xác minh thành công
         otpStore.remove(email);
         otpExpiry.remove(email);
         otpType.remove(email);

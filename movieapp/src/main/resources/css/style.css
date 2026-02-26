@@ -1,39 +1,76 @@
-/* TextField & PasswordField */
-.text-input {
-    -fx-background-color: transparent;
+.root {
+    -main-cyan: #00B4D8;
+    -dark-cyan: #0077B6;
+    -light-cyan: #90E0EF;
+    -bg-dark: #0D1117;
+    -bg-input: #161B22;
+    -border-grey: #30363D;
+    -text-muted: #8b949e;
+}
+.input-field, .text-field, .password-field {
+    -fx-background-color: -bg-input;
+    -fx-border-color: -border-grey;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
     -fx-text-fill: white;
-    -fx-prompt-text-fill: gray;
-    -fx-border-color: white;
-    -fx-border-width: 0 0 1 0;
+    -fx-prompt-text-fill: #555555;
+    -fx-padding: 10 15 10 40;
+    -fx-font-size: 14px;
 }
-
-/* Button đăng nhập */
-.btn-login {
-    -fx-background-color: #ff8c00;
+.input-field:focused, .text-field:focused, .password-field:focused {
+    -fx-border-color: -main-cyan;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 180, 216, 0.3), 8, 0, 0, 0);
+}
+.otp-field {
+    -fx-background-color: -bg-input;
+    -fx-text-fill: -main-cyan;
+    -fx-border-color: -border-grey;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+}
+.btn-primary, .btnLogin, .btnRegister {
+    -fx-background-color: linear-gradient(to right, -main-cyan, -dark-cyan);
+    -fx-background-radius: 25;
     -fx-text-fill: white;
-    -fx-background-radius: 20;
-}
-
-.btnLogin:hover {
-    -fx-background-color: #ffa733;
-    -fx-background-radius: 20;
-}
-
-/* Hyperlink mặc định */
-.linkForgotPassword{
-    -fx-text-fill: #8b949e;
-    -fx-font-size: 13px;
-}
-.linkRegister{
-    -fx-text-fill: #8b949e;
-    -fx-font-size: 13px;
-}
-/* Khi hover */
-.linkRegister:hover {
-    -fx-text-fill: #FF8C00;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
     -fx-cursor: hand;
+    -fx-transition: 0.3s;
 }
-.linkForgotPassword:hover {
-    -fx-text-fill: #FF8C00;
-    -fx-cursor: hand;
+.btn-primary:hover, .btnLogin:hover, .btnRegister:hover {
+    -fx-background-color: -dark-cyan;
+    -fx-effect: dropshadow(gaussian, rgba(0, 180, 216, 0.5), 15, 0, 0, 0);
+}
+.btn-primary:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+.hyperlink {
+    -fx-text-fill: -text-muted;
+    -fx-underline: false;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+.hyperlink:hover {
+    -fx-text-fill: -main-cyan;
+}
+.link-highlight {
+    -fx-text-fill: -main-cyan;
+    -fx-font-weight: bold;
+}
+.title-text {
+    -fx-fill: -main-cyan;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 180, 216, 0.7), 15, 0.3, 0, 0);
+}
+.label-error {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 12px;
+    -fx-alignment: center;
+}
+.icon-view {
+    -fx-opacity: 0.8;
 }
