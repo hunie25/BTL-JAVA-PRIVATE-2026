@@ -9,7 +9,6 @@
 * [Tổng quan dự án](#-tổng-quan-dự-án)
 * [Công nghệ Backend & Auth](#-công-nghệ-backend--auth)
 * [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
-* [Sơ đồ Database (ERD)](#-sơ-đồ-database-erd)
 * [Tính năng nổi bật](#-tính-năng-nổi-bật)
 * [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
 ---
