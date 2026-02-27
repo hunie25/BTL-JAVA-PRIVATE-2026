@@ -10,10 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.CacheHint;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.SwipeEvent;
@@ -43,21 +40,22 @@ public class HomeController {
 
     @FXML private HBox newMoviesContainer;
 
-    // Nếu FXML hiện tại chưa có loadingBox thì để null vẫn chạy được
     @FXML private VBox loadingBox;
     @FXML private ScrollPane mainContentScroll;
 
-    // ===== TYPE CHIPS =====
     @FXML private ScrollPane spType;
     @FXML private HBox hbType;
     @FXML private Label lbSectionTitle;
+
+    @FXML private HBox searchBar;
+    @FXML private TextField txtSearch;
+    @FXML private Button btnUser;
 
     private final ToggleGroup typeGroup = new ToggleGroup();
     private double dragStartX;
 
     private record TypeItem(String title, String listSlug) {}
 
-    // Slug chuẩn theo ophim1 v1
     private final List<TypeItem> typeItems = List.of(
             new TypeItem("Phim Mới", "phim-moi"),
             new TypeItem("Phim Bộ", "phim-bo"),
@@ -76,20 +74,15 @@ public class HomeController {
 
     private int selectedTypeIndex = 0;
 
-    // ===== HERO =====
     private List<Movie> heroMovies = new ArrayList<>();
     private int currentHeroIndex = 0;
 
-    // Cache ảnh theo index slide đang dùng
     private final Map<Integer, Image> imageCache = new HashMap<>();
 
-    // Cache URL hero đã resolve theo slug (ưu tiên backdrop từ API /images)
     private final Map<String, String> heroUrlBySlugCache = new HashMap<>();
 
-    // Đánh dấu index hero đang resolve để tránh gọi lặp
     private final Map<Integer, Boolean> heroResolving = new HashMap<>();
 
-    // Cache poster/card fallback TMDB theo slug
     private final Map<String, String> resolvedPosterUrlCache = new HashMap<>();
 
     private final MovieService movieService = new MovieService();
@@ -105,7 +98,9 @@ public class HomeController {
 
     @FXML
     public void initialize() {
-        // Clip bo góc cho khung app
+        searchScheduler = new PauseTransition(Duration.millis(500));
+        searchScheduler.setOnFinished(event -> performSearch());
+
         if (appContent != null) {
             Rectangle screenClip = new Rectangle();
             screenClip.widthProperty().bind(appContent.widthProperty());
@@ -115,28 +110,23 @@ public class HomeController {
             appContent.setClip(screenClip);
         }
 
-        // Setup hero slider
         if (sliderClipPane != null && heroContainer != null && imgView1 != null && imgView2 != null) {
             sliderClipPane.prefWidthProperty().bind(heroContainer.widthProperty());
             sliderClipPane.prefHeightProperty().bind(heroContainer.heightProperty());
 
-            // Clip thật sự theo kích thước vùng hero ảnh
             Rectangle heroClip = new Rectangle();
             heroClip.widthProperty().bind(sliderClipPane.widthProperty());
             heroClip.heightProperty().bind(sliderClipPane.heightProperty());
             sliderClipPane.setClip(heroClip);
 
-            // Ảnh fill theo vùng hero
             imgView1.fitWidthProperty().bind(sliderClipPane.widthProperty());
             imgView1.fitHeightProperty().bind(sliderClipPane.heightProperty());
             imgView2.fitWidthProperty().bind(sliderClipPane.widthProperty());
             imgView2.fitHeightProperty().bind(sliderClipPane.heightProperty());
 
-            // Không méo ảnh
             imgView1.setPreserveRatio(true);
             imgView2.setPreserveRatio(true);
 
-            // Render mượt hơn
             imgView1.setSmooth(true);
             imgView2.setSmooth(true);
 
@@ -145,7 +135,6 @@ public class HomeController {
             imgView2.setCache(true);
             imgView2.setCacheHint(CacheHint.QUALITY);
 
-            // Cover mode (crop đẹp thay vì stretch)
             installHeroCoverMode(imgView1);
             installHeroCoverMode(imgView2);
 
@@ -160,27 +149,19 @@ public class HomeController {
         initTypeChips();
         enableTypeSwipe();
 
-        // Load lần đầu:
-        // 1) HERO load một lần
-        // 2) List dưới theo tab mặc định
         loadHeroOnce();
         loadTypeContent(0);
     }
 
-    // =========================
-    // HERO: chỉ load 1 lần (không reload theo tab)
-    // =========================
     private void loadHeroOnce() {
         Task<List<Movie>> task = new Task<>() {
             @Override
             protected List<Movie> call() {
-                // Ưu tiên API home nếu service đã có
                 try {
                     List<Movie> home = movieService.getHomeMovies();
                     if (home != null && !home.isEmpty()) return home;
                 } catch (Exception ignored) {}
 
-                // Fallback nếu chưa implement getHomeMovies()
                 try {
                     List<Movie> list = movieService.getMoviesByList("phim-moi", 1);
                     if (list != null && !list.isEmpty()) return list;
@@ -219,9 +200,6 @@ public class HomeController {
         t.start();
     }
 
-    // =========================
-    // TYPE CHIPS UI
-    // =========================
     private void initTypeChips() {
         if (hbType == null) return;
         hbType.getChildren().clear();
@@ -273,7 +251,6 @@ public class HomeController {
             ((ToggleButton) hbType.getChildren().get(idx)).setSelected(true);
         }
 
-        // CHỈ load phần dưới, không đụng hero
         loadTypeContent(idx);
         scrollChipIntoView(idx);
     }
@@ -295,9 +272,6 @@ public class HomeController {
         spType.setHvalue(Math.max(0, Math.min(1, hVal)));
     }
 
-    // =========================
-    // LIST DƯỚI HERO: load theo tab
-    // =========================
     private void loadTypeContent(int idx) {
         if (idx < 0 || idx >= typeItems.size()) return;
 
@@ -365,9 +339,6 @@ public class HomeController {
         t.start();
     }
 
-    // =========================
-    // HERO SLIDER
-    // =========================
     private void startCycle(int index) {
         if (heroMovies == null || heroMovies.isEmpty() || activeImageView == null) return;
 
@@ -376,9 +347,9 @@ public class HomeController {
             String quickUrl = pickHeroImageUrl(heroMovies.get(index));
             if (quickUrl != null && !quickUrl.isBlank()) {
                 img = new Image(quickUrl, true);
-                imageCache.put(index, img); // cache luôn ảnh fallback nhanh
+                imageCache.put(index, img);
             }
-            resolveHeroImageAsync(index); // nâng cấp lên backdrop TMDB ở background
+            resolveHeroImageAsync(index);
         }
 
         if (img != null) {
@@ -538,14 +509,11 @@ public class HomeController {
         index = (index + heroMovies.size()) % heroMovies.size();
         if (imageCache.containsKey(index)) return;
 
-        // preload nhanh bằng URL có sẵn trước
         String quickUrl = pickHeroImageUrl(heroMovies.get(index));
         if (quickUrl != null && !quickUrl.isBlank()) {
             Image img = new Image(quickUrl, true);
             imageCache.put(index, img);
         }
-
-        // sau đó resolve backdrop chất lượng tốt hơn
         resolveHeroImageAsync(index);
     }
 
@@ -558,7 +526,6 @@ public class HomeController {
             if (cached != null && !cached.isBlank()) return cached;
         }
 
-        // fallback nhanh từ dữ liệu list
         try {
             String poster = movie.getFullPosterUrl();
             if (poster != null && !poster.isBlank()) return poster;
@@ -589,13 +556,11 @@ public class HomeController {
             protected String call() {
                 String slug = safe(movie.getSlug()).trim();
 
-                // 1) cache theo slug
                 if (!slug.isEmpty()) {
                     String cached = heroUrlBySlugCache.get(slug);
                     if (cached != null && !cached.isBlank()) return cached;
                 }
 
-                // 2) ưu tiên /images -> backdrop
                 if (!slug.isEmpty()) {
                     try {
                         var imgs = movieService.getMovieImages(slug);
@@ -610,7 +575,6 @@ public class HomeController {
                     } catch (Exception ignored) {}
                 }
 
-                // 3) fallback local
                 try {
                     String poster = movie.getFullPosterUrl();
                     if (poster != null && !poster.isBlank()) return poster;
@@ -646,7 +610,6 @@ public class HomeController {
 
             imageCache.put(heroIdx, img);
 
-            // chỉ update nếu slide hiện tại vẫn là heroIdx
             if (heroIdx == currentHeroIndex && activeImageView != null) {
                 activeImageView.setImage(img);
             }
@@ -663,7 +626,6 @@ public class HomeController {
         t.start();
     }
 
-    // Cover mode cho ImageView (crop thay vì méo)
     private void installHeroCoverMode(ImageView iv) {
         if (iv == null) return;
 
@@ -699,13 +661,11 @@ public class HomeController {
         double viewportW, viewportH, viewportX, viewportY;
 
         if (imageRatio > boxRatio) {
-            // Ảnh rộng hơn khung -> cắt 2 bên
             viewportH = imgH;
             viewportW = imgH * boxRatio;
             viewportX = (imgW - viewportW) / 2.0;
             viewportY = 0;
         } else {
-            // Ảnh cao hơn khung -> cắt trên/dưới, ưu tiên giữ vùng mặt (dịch lên nhẹ)
             viewportW = imgW;
             viewportH = imgW / boxRatio;
             viewportX = 0;
@@ -737,9 +697,6 @@ public class HomeController {
         SceneNavigator.loadWatchScene(heroMovies.get(currentHeroIndex));
     }
 
-    // =========================
-    // CARD IMAGE HELPERS
-    // =========================
     private void setPlaceholderPoster(ImageView imageView) {
         try {
             Image ph = new Image(getClass().getResource("/images/placeholder-poster.png").toExternalForm());
@@ -803,10 +760,6 @@ public class HomeController {
         return urls;
     }
 
-    /**
-     * Fallback cuối cùng: gọi API /phim/{slug}/images để lấy TMDB image.
-     * Chạy nền, không block UI.
-     */
     private void tryResolveCardImageFromApi(Movie movie, ImageView imageView) {
         if (movie == null || movie.getSlug() == null || movie.getSlug().isBlank()) {
             setPlaceholderPoster(imageView);
@@ -815,7 +768,6 @@ public class HomeController {
 
         String slug = movie.getSlug();
 
-        // cache nếu đã resolve trước đó
         if (resolvedPosterUrlCache.containsKey(slug)) {
             String cached = resolvedPosterUrlCache.get(slug);
             if (cached == null || cached.isBlank()) {
@@ -865,9 +817,6 @@ public class HomeController {
         t.start();
     }
 
-    // =========================
-    // MOVIE CARD
-    // =========================
     private StackPane createMovieCard(Movie movie) {
         StackPane card = new StackPane();
         card.getStyleClass().add("movie-card");
@@ -883,7 +832,6 @@ public class HomeController {
 
         List<String> candidates = buildCardImageCandidates(movie);
 
-        // thử thumb/poster trước -> fallback cuối gọi API images (TMDB)
         loadImageWithFallback(poster, candidates, () -> tryResolveCardImageFromApi(movie, poster));
 
         Rectangle clip = new Rectangle(140, 210);
@@ -915,7 +863,6 @@ public class HomeController {
 
         infoBox.getChildren().addAll(lbYear, lbName, lbCate);
 
-        // Badges góc trên (text-only)
         HBox topLeftBadges = new HBox(6);
         topLeftBadges.setAlignment(Pos.TOP_LEFT);
         StackPane.setAlignment(topLeftBadges, Pos.TOP_LEFT);
@@ -957,9 +904,6 @@ public class HomeController {
         return card;
     }
 
-    // =========================
-    // NORMALIZE / FORMAT
-    // =========================
     private String normalizeQuality(String raw) {
         if (raw == null) return "";
         String s = raw.trim();
@@ -1043,4 +987,98 @@ public class HomeController {
         if (barAnimation != null) barAnimation.stop();
         if (currentZoomAnimation != null) currentZoomAnimation.stop();
     }
-}
+
+    @FXML
+    private void handleUserClick() {
+        if (com.myapp.util.SessionManager.getUser() == null) {
+            System.out.println("Chưa đăng nhập -> Chuyển sang màn hình Login");
+            com.myapp.util.SceneNavigator.goLogin();
+        } else {
+            com.myapp.util.SceneNavigator.goProfile();
+        }
+    }
+
+    @FXML
+    private void toggleSearch() {
+        if (searchBar == null) return;
+
+        boolean isVisible = searchBar.isVisible();
+
+        if (!isVisible) {
+            searchBar.setManaged(true);
+            searchBar.setVisible(true);
+            searchBar.setOpacity(0);
+            FadeTransition ft = new FadeTransition(Duration.millis(200), searchBar);
+            ft.setToValue(1.0);
+            ft.play();
+            txtSearch.requestFocus();
+        } else {
+            searchBar.setVisible(false);
+            searchBar.setManaged(false);
+            txtSearch.clear();
+            selectType(0);
+        }
+    }
+
+    @FXML
+    private void handleSearch() {
+        String keyword = txtSearch.getText().trim();
+        if (keyword.isEmpty()) return;
+
+        if (lbSectionTitle != null) {
+            lbSectionTitle.setText("KẾT QUẢ: " + keyword.toUpperCase());
+        }
+
+        if (newMoviesContainer != null) {
+            newMoviesContainer.getChildren().clear();
+            newMoviesContainer.setOpacity(0.5);
+        }
+
+        Task<List<Movie>> searchTask = new Task<>() {
+            @Override
+            protected List<Movie> call() throws Exception {
+                return movieService.getOphimClient().searchMovies(keyword, 1);
+            }
+        };
+
+        searchTask.setOnSucceeded(e -> {
+            List<Movie> results = searchTask.getValue();
+            if (newMoviesContainer != null) {
+                newMoviesContainer.setOpacity(1.0);
+                if (results == null || results.isEmpty()) {
+                    Label noResult = new Label("Không tìm thấy phim nào phù hợp.");
+                    noResult.setStyle("-fx-text-fill: gray; -fx-padding: 20;");
+                    newMoviesContainer.getChildren().add(noResult);
+                } else {
+                    for (Movie m : results) {
+                        newMoviesContainer.getChildren().add(createMovieCard(m));
+                    }
+                }
+            }
+        });
+
+        Thread t = new Thread(searchTask);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    @FXML
+    private void goHome() {
+        mainContentScroll.setVvalue(0);
+    }
+        private PauseTransition searchScheduler;
+
+        @FXML
+        private void handleSearchKeyReleased() {
+            searchScheduler.playFromStart();
+        }
+
+        private void performSearch() {
+            String keyword = txtSearch.getText().trim();
+            if (keyword.length() >= 2) {
+                System.out.println("Đang tìm kiếm: " + keyword);
+
+                SceneNavigator.loadSearchScene(keyword);
+            }
+        }
+    }

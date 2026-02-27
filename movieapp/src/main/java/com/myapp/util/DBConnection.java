@@ -11,7 +11,6 @@ public class DBConnection {
 
     public static Connection getConnection() {
         try {
-            // Nạp Driver thủ công để chắc chắn
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(URL, USER, PASS);
             System.out.println(">>> KẾT NỐI DATABASE THÀNH CÔNG!");
