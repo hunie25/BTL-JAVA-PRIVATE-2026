@@ -3,6 +3,7 @@ package com.myapp.controller;
 import com.myapp.model.Episode;
 import com.myapp.model.Movie;
 import com.myapp.model.MovieResponse;
+import com.myapp.model.User;
 import com.myapp.service.MovieService;
 import com.myapp.util.SceneNavigator;
 import com.myapp.util.UiUtils;
@@ -24,7 +25,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import com.myapp.util.SessionManager;
+import com.myapp.dao.HistoryDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,30 +34,48 @@ import java.util.Locale;
 
 public class WatchController {
 
-    @FXML private StackPane rootStack;
-    @FXML private BorderPane phoneFrame;
-    @FXML private VBox playerWrapper;
-    @FXML private StackPane videoContainer;
-    @FXML private MediaView mediaView;
-    @FXML private WebView webView;
-    @FXML private BorderPane controlsPane;
-    @FXML private VBox overlayGradient;
-    @FXML private ProgressIndicator loadingSpinner;
-    @FXML private ScrollPane mainScrollPane;
+    @FXML
+    private StackPane rootStack;
+    @FXML
+    private BorderPane phoneFrame;
+    @FXML
+    private VBox playerWrapper;
+    @FXML
+    private StackPane videoContainer;
+    @FXML
+    private MediaView mediaView;
+    @FXML
+    private WebView webView;
+    @FXML
+    private BorderPane controlsPane;
+    @FXML
+    private VBox overlayGradient;
+    @FXML
+    private ProgressIndicator loadingSpinner;
+    @FXML
+    private ScrollPane mainScrollPane;
 
-    // Controls
-    @FXML private Button centerPlayBtn;
-    @FXML private SVGPath iconPlayPause;
-    @FXML private Slider progressSlider;
-    @FXML private Slider volumeSlider;
-    @FXML private SVGPath iconVolume;
-    @FXML private Label lblVolume;
-    @FXML private Label lblDuration;
-    @FXML private VBox settingsMenu;
+    @FXML
+    private Button centerPlayBtn;
+    @FXML
+    private SVGPath iconPlayPause;
+    @FXML
+    private Slider progressSlider;
+    @FXML
+    private Slider volumeSlider;
+    @FXML
+    private SVGPath iconVolume;
+    @FXML
+    private Label lblVolume;
+    @FXML
+    private Label lblDuration;
+    @FXML
+    private VBox settingsMenu;
 
-    // Info
-    @FXML private Label lblTitle, lblYear, lblCountry, lblTime, lblDesc;
-    @FXML private HBox episodeContainer, bottomPosterContainer;
+    @FXML
+    private Label lblTitle, lblYear, lblCountry, lblTime, lblDesc;
+    @FXML
+    private HBox episodeContainer, bottomPosterContainer;
 
     private MediaPlayer mediaPlayer;
     private WebEngine webEngine;
@@ -69,23 +89,23 @@ public class WatchController {
     private final String PATH_PAUSE = "M6 19h4V5H6v14zm8-14v14h4V5h-4z";
     private final String PATH_VOL_ON = "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z";
     private final String PATH_VOL_OFF = "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z";
+    private Movie movie;
 
     public void initData(Movie movie) {
-        // MediaView chuẩn
+        this.movie = movie;
+        recordHistory(movie);
         if (mediaView != null && videoContainer != null) {
             mediaView.setPreserveRatio(true);
             mediaView.fitWidthProperty().bind(videoContainer.widthProperty());
             mediaView.fitHeightProperty().bind(videoContainer.heightProperty());
         }
 
-        // WebView fallback cho embed
         if (webView != null) {
             webEngine = webView.getEngine();
             webView.setVisible(false);
             webView.setManaged(false);
         }
 
-        // Clip bo góc khung điện thoại
         if (phoneFrame != null) {
             roundedClip = new Rectangle();
             roundedClip.widthProperty().bind(phoneFrame.widthProperty());
@@ -95,28 +115,27 @@ public class WatchController {
             phoneFrame.setClip(roundedClip);
         }
 
-        // Reset về chế độ điện thoại dọc
         resetToPhoneMode();
         if (phoneFrame != null) phoneFrame.setTranslateY(0);
 
-        // UI initial state
-        if (controlsPane != null) { controlsPane.setVisible(true); controlsPane.setOpacity(1); }
+        if (controlsPane != null) {
+            controlsPane.setVisible(true);
+            controlsPane.setOpacity(1);
+        }
         if (overlayGradient != null) overlayGradient.setVisible(true);
         if (loadingSpinner != null) loadingSpinner.setVisible(true);
         if (settingsMenu != null) settingsMenu.setVisible(false);
 
         if (lblTitle != null) lblTitle.setText(movie != null ? safe(movie.getName()) : "");
         if (lblDesc != null) lblDesc.setText("Đang tải...");
-        if (lblYear != null) lblYear.setText(movie != null && movie.getYear() != null ? String.valueOf(movie.getYear()) : "");
+        if (lblYear != null)
+            lblYear.setText(movie != null && movie.getYear() != null ? String.valueOf(movie.getYear()) : "");
 
         setupControls();
         loadMovieData(movie);
         loadBottomPosters();
     }
 
-    // =========================
-    // PHONE / FULLSCREEN
-    // =========================
     private void resetToPhoneMode() {
         if (phoneFrame == null || videoContainer == null) return;
 
@@ -203,9 +222,6 @@ public class WatchController {
         }
     }
 
-    // =========================
-    // LOAD DATA (ophim1 v1)
-    // =========================
     private void loadMovieData(Movie movie) {
         if (movie == null || movie.getSlug() == null || movie.getSlug().isBlank()) {
             if (loadingSpinner != null) loadingSpinner.setVisible(false);
@@ -266,7 +282,6 @@ public class WatchController {
         if (detail == null) return new ArrayList<>();
 
         try {
-            // Nếu Movie.java của bạn đã có getEpisodes() chuẩn
             Object episodesObj = detail.getClass().getMethod("getEpisodes").invoke(detail);
             if (episodesObj instanceof List<?> groups) {
                 for (Object groupObj : groups) {
@@ -276,15 +291,11 @@ public class WatchController {
                 }
             }
         } catch (Exception ignored) {
-            // Chưa có getEpisodes() trong Movie -> trả list rỗng, app vẫn không crash
         }
 
         return new ArrayList<>();
     }
 
-    // =========================
-    // PLAYER
-    // =========================
     private void playEpisode(Episode.ServerData ep) {
         if (ep == null) return;
         cleanup();
@@ -292,7 +303,6 @@ public class WatchController {
         String m3u8 = safe(ep.getLinkM3u8());
         String embed = safe(ep.getLinkEmbed());
 
-        // Ưu tiên m3u8
         if (!m3u8.isBlank()) {
             try {
                 if (webView != null) {
@@ -343,7 +353,6 @@ public class WatchController {
             }
         }
 
-        // fallback embed
         if (!embed.isBlank() && webEngine != null) {
             if (mediaView != null) mediaView.setVisible(false);
             webView.setVisible(true);
@@ -386,9 +395,6 @@ public class WatchController {
         }
     }
 
-    // =========================
-    // BOTTOM POSTERS
-    // =========================
     private void loadBottomPosters() {
         UiUtils.runAsync(movieService::getNewMovies, result -> {
             @SuppressWarnings("unchecked")
@@ -421,7 +427,8 @@ public class WatchController {
         try {
             String url = movie != null ? safeThumb(movie) : "";
             if (!url.isBlank()) img.setImage(new Image(url, true));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         Rectangle clip = new Rectangle(100, 150);
         clip.setArcWidth(10);
@@ -438,9 +445,6 @@ public class WatchController {
         return card;
     }
 
-    // =========================
-    // CONTROLS
-    // =========================
     private void setupControls() {
         if (iconPlayPause != null) iconPlayPause.setContent(PATH_PLAY);
         if (iconVolume != null) iconVolume.setContent(PATH_VOL_ON);
@@ -544,11 +548,30 @@ public class WatchController {
         if (hideControlsTimer != null) hideControlsTimer.stop();
     }
 
-    @FXML void setSpeed05() { setSpeed(0.5); }
-    @FXML void setSpeed10() { setSpeed(1.0); }
-    @FXML void setSpeed125() { setSpeed(1.25); }
-    @FXML void setSpeed15() { setSpeed(1.5); }
-    @FXML void setSpeed20() { setSpeed(2.0); }
+    @FXML
+    void setSpeed05() {
+        setSpeed(0.5);
+    }
+
+    @FXML
+    void setSpeed10() {
+        setSpeed(1.0);
+    }
+
+    @FXML
+    void setSpeed125() {
+        setSpeed(1.25);
+    }
+
+    @FXML
+    void setSpeed15() {
+        setSpeed(1.5);
+    }
+
+    @FXML
+    void setSpeed20() {
+        setSpeed(2.0);
+    }
 
     private void setSpeed(double speed) {
         if (mediaPlayer != null) mediaPlayer.setRate(speed);
@@ -569,9 +592,6 @@ public class WatchController {
         tt.play();
     }
 
-    // =========================
-    // CLEANUP
-    // =========================
     private void cleanup() {
         try {
             if (mediaPlayer != null) {
@@ -579,18 +599,17 @@ public class WatchController {
                 mediaPlayer.dispose();
                 mediaPlayer = null;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             if (webEngine != null) {
                 webEngine.load(null);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
-    // =========================
-    // HELPERS
-    // =========================
     private String safe(String s) {
         return s == null ? "" : s;
     }
@@ -614,11 +633,10 @@ public class WatchController {
     private String safeThumb(Movie movie) {
         if (movie == null) return "";
         try {
-            // ưu tiên method nếu bạn đã thêm trong Movie.java
             return safe((String) movie.getClass().getMethod("getFullThumbUrl").invoke(movie));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
-        // fallback từ thumb_url
         try {
             String thumb = movie.getThumbUrl();
             if (thumb == null || thumb.isBlank()) return "";
@@ -660,10 +678,35 @@ public class WatchController {
                     if (name != null && !String.valueOf(name).isBlank()) {
                         return String.valueOf(name);
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return "Quốc tế";
+    }
+
+    private void recordHistory(Movie movie) {
+        if (movie == null) return;
+        User user = SessionManager.getUser();
+
+        if (user != null) {
+            HistoryDAO historyDAO = new HistoryDAO();
+            new Thread(() -> {
+                try {
+                    String slug = (movie.getSlug() != null) ? movie.getSlug() : "";
+                    String name = (movie.getName() != null) ? movie.getName() : "Phim không tên";
+                    String thumb = (movie.getThumbUrl() != null) ? movie.getThumbUrl() : "";
+
+                    historyDAO.saveOrUpdate(user.getId(), slug, name, thumb);
+                    System.out.println("✅ Đã lưu vào lịch sử: " + name);
+                } catch (Exception e) {
+                    System.err.println("❌ Lỗi khi lưu lịch sử: " + e.getMessage());
+                }
+            }).start();
+        } else {
+            System.out.println("ℹ️ Người dùng chưa đăng nhập, không lưu lịch sử.");
+        }
     }
 }

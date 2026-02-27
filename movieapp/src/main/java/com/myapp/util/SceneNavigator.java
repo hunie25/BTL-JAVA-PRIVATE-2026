@@ -1,5 +1,6 @@
 package com.myapp.util;
 
+import com.myapp.controller.SearchResultsController;
 import com.myapp.controller.WatchController;
 import com.myapp.model.Movie;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +14,6 @@ public class SceneNavigator {
 
     private static Stage mainStage;
 
-    // FXML paths
     private static final String LOGIN_FXML = "/view/login.fxml";
     private static final String REGISTER_FXML = "/view/register.fxml";
     private static final String FORGOT_FXML = "/view/forgotPassword.fxml";
@@ -22,17 +22,14 @@ public class SceneNavigator {
 
     public static final String HOME_FXML = "/fxml/home.fxml";
     public static final String WATCH_FXML = "/fxml/watch.fxml";
+    private static final String PROFILE_FXML = "/fxml/profile.fxml";
+    private static final String SEARCH_RESULT_FXML = "/fxml/searchResults.fxml";
 
     private SceneNavigator() {}
 
-    /**
-     * Gọi ở MainApp.start()
-     */
     public static void setMainStage(Stage stage) {
         mainStage = stage;
     }
-
-    /* ===================== AUTH SCENES ===================== */
 
     public static void goLogin() {
         switchScene(LOGIN_FXML);
@@ -54,7 +51,9 @@ public class SceneNavigator {
         switchScene(RESET_FXML);
     }
 
-    /* ===================== COMMON SWITCH ===================== */
+    public static void goProfile() {
+        switchScene(PROFILE_FXML);
+    }
 
     private static void switchScene(String fxmlPath) {
         try {
@@ -78,6 +77,30 @@ public class SceneNavigator {
         } catch (IOException e) {
             e.printStackTrace();
             UiUtils.showError("Lỗi hệ thống", "Không thể tải màn hình: " + e.getMessage());
+        }
+    }
+
+    public static void loadSearchScene(String keyword) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(SEARCH_RESULT_FXML));
+            Parent root = loader.load();
+            SearchResultsController controller = loader.getController();
+            controller.searchMovies(keyword);
+
+            Scene scene = new Scene(
+                    root,
+                    mainStage.getScene().getWidth(),
+                    mainStage.getScene().getHeight()
+            );
+
+            mainStage.setScene(scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            UiUtils.showError(
+                    "Lỗi hệ thống",
+                    "Không thể mở trang tìm kiếm: " + e.getMessage()
+            );
         }
     }
 

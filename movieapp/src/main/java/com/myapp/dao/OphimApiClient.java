@@ -23,11 +23,8 @@ public class OphimApiClient {
     // TMDB image domain
     private static final String TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/";
 
-    // Size gợi ý:
-    // - HERO/backdrop: original để nét nhất (bạn có thể đổi về w1280 nếu muốn nhẹ hơn)
-    // - Poster/card fallback: w780 là ổn
-    private static final String HERO_BACKDROP_SIZE = "original"; // hoặc "w1280"
-    private static final String POSTER_SIZE = "w780";
+    private static final String HERO_BACKDROP_SIZE = "w1280";
+    private static final String POSTER_SIZE = "w500";
 
     private final OkHttpClient client;
     private final ObjectMapper mapper;
@@ -42,9 +39,6 @@ public class OphimApiClient {
         this.mapper = new ObjectMapper();
     }
 
-    // =========================
-    // HOME: /v1/api/home
-    // =========================
     public List<Movie> getHomeMovies() {
         HttpUrl url = HttpUrl.parse(API_BASE + "/home");
         if (url == null) return new ArrayList<>();
@@ -73,9 +67,6 @@ public class OphimApiClient {
         return new ArrayList<>();
     }
 
-    // =========================
-    // DANH SÁCH: /v1/api/danh-sach/{slug}?page=&limit=
-    // =========================
     public List<Movie> getMoviesByList(String listSlug, int page, int limit) {
         HttpUrl baseUrl = HttpUrl.parse(API_BASE + "/danh-sach/" + listSlug);
         if (baseUrl == null) return new ArrayList<>();
@@ -110,9 +101,6 @@ public class OphimApiClient {
         return new ArrayList<>();
     }
 
-    // =========================
-    // CHI TIẾT PHIM: /v1/api/phim/{slug}
-    // =========================
     public MovieResponse getMovieDetails(String slug) {
         if (slug == null || slug.isBlank()) return null;
 
@@ -135,9 +123,6 @@ public class OphimApiClient {
         }
     }
 
-    // =========================
-    // ẢNH TMDB: /v1/api/phim/{slug}/images
-    // =========================
     public MovieImages getMovieImages(String slug) {
         if (slug == null || slug.isBlank()) return new MovieImages();
 
@@ -172,10 +157,6 @@ public class OphimApiClient {
                     String full = toTmdbImageUrl(filePath, HERO_BACKDROP_SIZE);
                     if (full != null) out.backdrops.add(full);
 
-                    // (Tuỳ chọn) thêm fallback size nhỏ hơn nếu original lỗi:
-                    // String fallback = toTmdbImageUrl(filePath, "w1280");
-                    // if (fallback != null && !out.backdrops.contains(fallback)) out.backdrops.add(fallback);
-
                 } else if ("poster".equalsIgnoreCase(type)) {
                     String full = toTmdbImageUrl(filePath, POSTER_SIZE);
                     if (full != null) out.posters.add(full);
@@ -193,7 +174,6 @@ public class OphimApiClient {
     private String toTmdbImageUrl(String filePath, String size) {
         if (filePath == null || filePath.isBlank()) return null;
 
-        // Nếu API trả full url thì dùng luôn
         if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
             return filePath;
         }
@@ -204,7 +184,6 @@ public class OphimApiClient {
         return TMDB_IMAGE_BASE + size + filePath;
     }
 
-    // ===== DTOs nội bộ cho parse =====
     @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
     public static class HomeData {
         @com.fasterxml.jackson.annotation.JsonProperty("items")
@@ -228,5 +207,37 @@ public class OphimApiClient {
     public static class MovieImages {
         public List<String> posters = new ArrayList<>();
         public List<String> backdrops = new ArrayList<>();
+    }
+
+    public List<Movie> searchMovies(String keyword, int page) {
+        HttpUrl url = HttpUrl.parse(API_BASE + "/tim-kiem")
+                .newBuilder()
+                .addQueryParameter("keyword", keyword)
+                .addQueryParameter("page", String.valueOf(Math.max(1, page)))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("accept", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful() || response.body() == null) return new ArrayList<>();
+
+            String json = response.body().string();
+            ApiResponse<ListData> res = mapper.readValue(
+                    json,
+                    mapper.getTypeFactory().constructParametricType(ApiResponse.class, ListData.class)
+            );
+
+            if (res != null && res.isSuccess() && res.getData() != null) {
+                return res.getData().getItems();
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi tìm kiếm với từ khóa: " + keyword);
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

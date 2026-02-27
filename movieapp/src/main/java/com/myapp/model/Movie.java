@@ -63,7 +63,6 @@ public class Movie {
     @JsonProperty("episodes")
     private List<Episode> episodes = new ArrayList<>();
 
-    // ===== Getters =====
     public String getId() { return id; }
     public String getName() { return name; }
     public String getOriginName() { return originName; }
@@ -83,7 +82,6 @@ public class Movie {
     public List<Taxonomy> getCountry() { return country; }
     public List<Episode> getEpisodes() { return episodes; }
 
-    // ===== URL helpers (tương thích nhiều kiểu trả về) =====
     public String getFullThumbUrl() {
         return toFullImageUrl(thumbUrl);
     }
@@ -98,17 +96,14 @@ public class Movie {
 
         if (v.startsWith("http://") || v.startsWith("https://")) return v;
 
-        // Nếu API trả path đầy đủ kiểu /uploads/movies/xxx.jpg
         if (v.startsWith("/uploads/")) {
             return "https://ophim1.com" + v;
         }
 
-        // Nếu API trả /thumb.jpg /poster.jpg (thường ở endpoint chi tiết)
         if (v.startsWith("/")) {
             return "https://img.ophim.cc/uploads/movies" + v;
         }
 
-        // Nếu API trả tên file trần
         return "https://img.ophim.cc/uploads/movies/" + v;
     }
 
@@ -127,4 +122,12 @@ public class Movie {
         public String getName() { return name; }
         public String getSlug() { return slug; }
     }
+
+    public void setId(String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setOriginName(String originName) { this.originName = originName; }
+    public void setSlug(String slug) { this.slug = slug; }
+    public void setThumbUrl(String thumbUrl) { this.thumbUrl = thumbUrl; }
+    public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
+    public void setYear(Integer year) { this.year = year; }
 }
