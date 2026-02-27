@@ -39,6 +39,8 @@ public class HomeController {
     @FXML private HBox heroDots;
 
     @FXML private HBox newMoviesContainer;
+    @FXML private HBox seriesMoviesContainer;
+    @FXML private HBox singleMoviesContainer;
 
     @FXML private VBox loadingBox;
     @FXML private ScrollPane mainContentScroll;
@@ -109,6 +111,9 @@ public class HomeController {
             screenClip.setArcHeight(35);
             appContent.setClip(screenClip);
         }
+
+        loadCategoryToContainer("phim-bo", seriesMoviesContainer);
+        loadCategoryToContainer("phim-le", singleMoviesContainer);
 
         if (sliderClipPane != null && heroContainer != null && imgView1 != null && imgView2 != null) {
             sliderClipPane.prefWidthProperty().bind(heroContainer.widthProperty());
@@ -1081,4 +1086,28 @@ public class HomeController {
                 SceneNavigator.loadSearchScene(keyword);
             }
         }
+
+    private void loadCategoryToContainer(String typeSlug, HBox container) {
+        Task<List<Movie>> task = new Task<>() {
+            @Override
+            protected List<Movie> call() {
+                return movieService.getMoviesByList(typeSlug, 1);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            List<Movie> movies = task.getValue();
+            if (movies != null) {
+                container.getChildren().clear();
+                int limit = Math.min(12, movies.size());
+                for (int i = 0; i < limit; i++) {
+                    container.getChildren().add(createMovieCard(movies.get(i)));
+                }
+            }
+        });
+
+        Thread t = new Thread(task, "loader-" + typeSlug);
+        t.setDaemon(true);
+        t.start();
+    }
     }

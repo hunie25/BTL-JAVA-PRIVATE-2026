@@ -74,6 +74,7 @@ public class ProfileController {
         btnDelete.setTranslateY(-60);
 
         btnDelete.setOnAction(e -> {
+            e.consume();
             HistoryDAO dao = new HistoryDAO();
             dao.deleteHistory(userId, m.getSlug());
             loadHistory(userId);
@@ -88,6 +89,12 @@ public class ProfileController {
         title.setAlignment(Pos.CENTER);
 
         card.getChildren().addAll(imagePane, title);
+        card.setOnMouseClicked(event -> {
+            if (m != null) {
+                SceneNavigator.loadWatchScene(m);
+            }
+        });
+
         return card;
     }
 
