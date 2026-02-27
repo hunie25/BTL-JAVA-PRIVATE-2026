@@ -10,7 +10,7 @@
 * [Công nghệ Backend & Auth](#-công-nghệ-backend--auth)
 * [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
 * [Tính năng nổi bật](#-tính-năng-nổi-bật)
-* [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
+* [Giao diện ứng dụng](#-giao-diện-ứng-dụng)
 ---
 ## 🛠 Công nghệ sử dụng (Tech Stack):
 Dự án tập trung vào việc áp dụng các thư viện Java hiện đại để giải quyết các bài toán về mạng, dữ liệu và xử lý bất đồng bộ.
@@ -48,6 +48,7 @@ movieapp/
 │       │   │   ├── WatchController.java
 |       |   |   └── ...
 │       │   ├── dao/                       # Tầng giao tiếp dữ liệu (API & Database)
+│       │   │   ├── HistoryDAO.java
 │       │   │   ├── OphimApiClient.java
 │       │   │   └── UserDAO.java
 │       │   ├── exception/
@@ -83,3 +84,11 @@ movieapp/
 │               └── ...
 └── pom.xml                               # Cấu hình Maven & Dependencies
 ```
+---
+## 🌟 Tính năng nổi bật (Key Features):
+- Đăng nhập, đăng kí, có gửi otp về Email (chào mừng, xác thực để đặt lại mật khẩu khi quên). Sử dụng Pattern Singleton để duy trì trạng thái đăng nhập của người dùng xuyên suốt các màn hình.
+- Tự động cập nhật kho phim khổng lồ từ nguồn API của OphimAPI.
+- Cá nhân hóa: Lưu lịch sử xem của người dùng và cập nhật theo thời gian thực.
+- Xem phim, tua video, chỉnh tốc độ phát.
+---
+## 📺 Giao diện ứng dụng (App Screenshots)
