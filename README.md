@@ -92,5 +92,8 @@ movieapp/
 - Xem phim, tua video, chỉnh tốc độ phát.
 ---
 ## 📺 Giao diện ứng dụng (App Screenshots):
-
-
+<img src="https://github.com/user-attachments/assets/a2b15ff6-cf9f-429e-93a4-4b99cfcfae16" width="180"/>
+<img src="https://github.com/user-attachments/assets/fb01f067-5ba4-4471-a05e-273c2aca835f" width="180"/>
+<img src="https://github.com/user-attachments/assets/0d6abf5b-cece-4271-95b5-ed14809e2e59" width="180"/>
+<img src="https://github.com/user-attachments/assets/50b2bc16-072b-4f2b-bf18-c38d0bb1ad34" width="180"/>
+<img src="https://github.com/user-attachments/assets/22763a7a-c306-429d-aa30-d7739405f2c3" width="180"/>
