@@ -113,13 +113,26 @@ public class ProfileController {
         if (raw == null || raw.isBlank()) return "";
 
         String s = raw.trim().replace("T", " ");
-        if (s.contains(".")) s = s.substring(0, s.indexOf('.'));
+        if (s.contains(".")) s = s.substring(0, s.indexOf('.')); // bỏ .0
 
         try {
-            DateTimeFormatter in = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dt = LocalDateTime.parse(s, in);
-            DateTimeFormatter out = DateTimeFormatter.ofPattern("HH:mm:ss d/M/yyyy");
-            return dt.format(out);
+            // Nếu DB đã lưu dạng có timezone (ví dụ 2026-02-28T09:36:36+07:00 hoặc ...Z)
+            if (s.endsWith("Z") || s.matches(".*[+-]\\d{2}:\\d{2}$")) {
+                java.time.OffsetDateTime odt = java.time.OffsetDateTime.parse(s.replace(" ", "T"));
+                java.time.ZonedDateTime zdt = odt.atZoneSameInstant(java.time.ZoneId.systemDefault());
+                return zdt.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss d/M/yyyy"));
+            }
+
+
+            java.time.LocalDateTime utcLdt = java.time.LocalDateTime.parse(
+                    s, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            );
+
+            java.time.ZonedDateTime local = utcLdt
+                    .atZone(java.time.ZoneOffset.UTC)
+                    .withZoneSameInstant(java.time.ZoneId.systemDefault());
+
+            return local.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss d/M/yyyy"));
         } catch (Exception e) {
             return s;
         }

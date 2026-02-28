@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 public class HomeController {
 
     @FXML private StackPane phoneFrame;
@@ -39,6 +40,9 @@ public class HomeController {
     @FXML private HBox heroDots;
 
     @FXML private HBox newMoviesContainer;
+    @FXML private HBox seriesHotContainer;
+    @FXML private HBox singleNewContainer;
+    @FXML private HBox animeFeaturedContainer;
 
     @FXML private VBox loadingBox;
     @FXML private ScrollPane mainContentScroll;
@@ -46,6 +50,11 @@ public class HomeController {
     @FXML private ScrollPane spType;
     @FXML private HBox hbType;
     @FXML private Label lbSectionTitle;
+
+    // Explore overlay ("Khám phá" -> Thể loại)
+    @FXML private StackPane exploreOverlay;
+    @FXML private GridPane exploreGrid;
+
 
     @FXML private HBox searchBar;
     @FXML private TextField txtSearch;
@@ -70,6 +79,23 @@ public class HomeController {
             new TypeItem("Sắp Chiếu", "phim-sap-chieu"),
             new TypeItem("Chiếu Rạp", "phim-chieu-rap"),
             new TypeItem("Subteam", "subteam")
+    );
+
+    // Thứ tự hiển thị giống Hub (2 cột như screenshot)
+    private final List<TypeItem> exploreItems = List.of(
+            new TypeItem("Phim mới", "phim-moi"),
+            new TypeItem("Phim bộ", "phim-bo"),
+            new TypeItem("Phim lẻ", "phim-le"),
+            new TypeItem("TV Shows", "tv-shows"),
+            new TypeItem("Hoạt hình", "hoat-hinh"),
+            new TypeItem("Vietsub", "phim-vietsub"),
+            new TypeItem("Thuyết minh", "phim-thuyet-minh"),
+            new TypeItem("Lồng tiếng", "phim-long-tien"),
+            new TypeItem("Bộ đang chiếu", "phim-bo-dang-chieu"),
+            new TypeItem("Bộ hoàn thành", "phim-bo-hoan-thanh"),
+            new TypeItem("Sắp chiếu", "phim-sap-chieu"),
+            new TypeItem("Subteam", "subteam"),
+            new TypeItem("Chiếu rạp", "phim-chieu-rap")
     );
 
     private int selectedTypeIndex = 0;
@@ -98,6 +124,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+
         searchScheduler = new PauseTransition(Duration.millis(500));
         searchScheduler.setOnFinished(event -> performSearch());
 
@@ -149,8 +176,49 @@ public class HomeController {
         initTypeChips();
         enableTypeSwipe();
 
+        initExploreOverlay();
+
         loadHeroOnce();
         loadTypeContent(0);
+
+        loadExtraHomeSections();
+    }
+
+    private void loadExtraHomeSections() {
+        loadListInto("phim-bo", seriesHotContainer, 12);
+        loadListInto("phim-le", singleNewContainer, 12);
+        loadListInto("hoat-hinh", animeFeaturedContainer, 12);
+    }
+
+    private void loadListInto(String listSlug, HBox target, int limit) {
+        if (target == null) return;
+
+        Task<List<Movie>> task = new Task<>() {
+            @Override
+            protected List<Movie> call() {
+                try {
+                    return movieService.getMoviesByList(listSlug, 1);
+                } catch (Exception e) {
+                    return new ArrayList<>();
+                }
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            List<Movie> movies = task.getValue();
+            target.getChildren().clear();
+
+            if (movies == null || movies.isEmpty()) return;
+
+            int n = Math.min(limit, movies.size());
+            for (int i = 0; i < n; i++) {
+                target.getChildren().add(createMovieCard(movies.get(i)));
+            }
+        });
+
+        Thread t = new Thread(task, "home-section-" + listSlug);
+        t.setDaemon(true);
+        t.start();
     }
 
     private void loadHeroOnce() {
@@ -682,7 +750,7 @@ public class HomeController {
         if (heroOriginName != null) heroOriginName.setText(safe(movie.getOriginName()));
 
         if (heroYear != null) {
-            Integer y = movie.getYear();
+            String y = movie.getYear();
             heroYear.setText(y == null ? "" : String.valueOf(y));
         }
     }
@@ -865,12 +933,15 @@ public class HomeController {
 
         HBox topLeftBadges = new HBox(6);
         topLeftBadges.setAlignment(Pos.TOP_LEFT);
+        topLeftBadges.setMaxWidth(140 - 52);// chừa chỗ bên phải cho badge tập/hoàn tất
         StackPane.setAlignment(topLeftBadges, Pos.TOP_LEFT);
         StackPane.setMargin(topLeftBadges, new Insets(8, 8, 0, 8));
 
         String quality = normalizeQuality(movie.getQuality());
         if (!quality.isBlank()) {
             Label bQ = new Label(quality);
+            bQ.setMaxWidth(36);
+            bQ.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
             bQ.getStyleClass().addAll("badge-pill", "badge-quality");
             topLeftBadges.getChildren().add(bQ);
         }
@@ -878,6 +949,8 @@ public class HomeController {
         String lang = normalizeLang(movie.getLang());
         if (!lang.isBlank()) {
             Label bL = new Label(lang);
+            bL.setMaxWidth(68);
+            bL.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
             bL.getStyleClass().addAll("badge-pill", "badge-lang");
             topLeftBadges.getChildren().add(bL);
         }
@@ -1081,4 +1154,64 @@ public class HomeController {
                 SceneNavigator.loadSearchScene(keyword);
             }
         }
+
+    private void initExploreOverlay() {
+        if (exploreGrid == null) return;
+
+        exploreGrid.getChildren().clear();
+
+        // 2 cột cân nhau
+        if (exploreGrid.getColumnConstraints().isEmpty()) {
+            ColumnConstraints c1 = new ColumnConstraints();
+            c1.setPercentWidth(50);
+            c1.setHgrow(Priority.ALWAYS);
+
+            ColumnConstraints c2 = new ColumnConstraints();
+            c2.setPercentWidth(50);
+            c2.setHgrow(Priority.ALWAYS);
+
+            exploreGrid.getColumnConstraints().addAll(c1, c2);
+        }
+
+        for (int i = 0; i < typeItems.size(); i++) {
+            TypeItem item = typeItems.get(i);
+
+            Button b = new Button(item.title());
+            b.getStyleClass().add("explore-item");
+            b.setMaxWidth(Double.MAX_VALUE);
+
+            final String title = item.title();
+            final String slug = item.listSlug();
+            b.setOnAction(e -> {
+                closeExplore();
+                SceneNavigator.loadCategoryScene(title, slug);
+            });
+
+            int col = i % 2;
+            int row = i / 2;
+
+            exploreGrid.add(b, col, row);
+            GridPane.setHgrow(b, Priority.ALWAYS);
+        }
     }
+
+    @FXML
+    private void openExplore() {
+        System.out.println(">>> CLICK KHAM PHA");
+        if (exploreOverlay == null) {
+            System.out.println("!!! exploreOverlay is NULL (chưa add overlay vào home.fxml hoặc fx:id sai)");
+            return;
+        }
+        exploreOverlay.setVisible(true);
+        exploreOverlay.setManaged(true);
+        if (mainContentScroll != null) mainContentScroll.setDisable(true);
+    }
+
+    @FXML
+    private void closeExplore() {
+        if (exploreOverlay == null) return;
+        exploreOverlay.setVisible(false);
+        exploreOverlay.setManaged(false);
+        if (mainContentScroll != null) mainContentScroll.setDisable(false);
+    }
+}

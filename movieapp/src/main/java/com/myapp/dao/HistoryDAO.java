@@ -141,8 +141,8 @@ public class HistoryDAO {
                         m.setHistoryPositionSeconds(rs.getInt("position_seconds"));
                         m.setHistoryDurationSeconds(rs.getInt("duration_seconds"));
 
-                        Timestamp ts = rs.getTimestamp("viewed_at");
-                        m.setHistoryViewedAt(ts != null ? ts.toString() : null);
+                        String ts = rs.getString("viewed_at");
+                        m.setHistoryViewedAt(ts);
 
                         historyList.add(m);
                     }

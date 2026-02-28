@@ -34,7 +34,7 @@ public class Movie {
     private String time;
 
     @JsonProperty("year")
-    private Integer year;
+    private String year;
 
     @JsonProperty("quality")
     private String quality;
@@ -86,7 +86,7 @@ public class Movie {
     public String getPosterUrl() { return posterUrl; }
     public String getContent() { return content; }
     public String getTime() { return time; }
-    public Integer getYear() { return year; }
+    public String getYear() { return year; }
     public String getQuality() { return quality; }
     public String getLang() { return lang; }
     public String getEpisodeCurrent() { return episodeCurrent; }
@@ -154,5 +154,5 @@ public class Movie {
     public void setSlug(String slug) { this.slug = slug; }
     public void setThumbUrl(String thumbUrl) { this.thumbUrl = thumbUrl; }
     public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
-    public void setYear(Integer year) { this.year = year; }
+    public void setYear(String year) { this.year = year; }
 }

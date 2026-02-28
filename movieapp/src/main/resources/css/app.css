@@ -304,3 +304,227 @@
 .volume-slider:hover .thumb {
     -fx-scale-x: 1.2; -fx-scale-y: 1.2;
 }
+
+/* ======================= EXPLORE OVERLAY ======================= */
+.explore-overlay { -fx-background-color: transparent; }
+.explore-backdrop { -fx-background-color: rgba(0,0,0,0.70); }
+
+.explore-panel {
+    -fx-background-color: rgba(0,0,0,0.92);
+    -fx-background-radius: 22;
+    -fx-padding: 22 22 18 22;
+    -fx-pref-width: 340;
+    -fx-max-height: 640;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 20, 0.25, 0, 4);
+}
+
+.explore-title { -fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: 900; }
+
+.explore-close-btn { -fx-background-color: transparent; -fx-padding: 6; -fx-cursor: hand; }
+.explore-close-btn:hover { -fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 10; }
+.explore-close-icon { -fx-fill: rgba(255,255,255,0.55); }
+
+.explore-grid { -fx-padding: 10 0 0 0; }
+
+.explore-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 16px;
+    -fx-font-weight: 750;
+    -fx-padding: 10 0;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+.explore-item:hover { -fx-text-fill: rgba(255,255,255,0.90); }
+
+/* ======================= CATEGORY GRID ======================= */
+.category-header { -fx-padding: 10 20 6 20; }
+.category-bar { -fx-min-width: 4px; -fx-min-height: 18px; -fx-background-color: #22d3ee; -fx-background-radius: 2; }
+.category-title { -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: 900; }
+
+.grid-cell { -fx-background-color: transparent; -fx-cursor: hand; }
+.grid-cell:hover { -fx-scale-x: 1.02; -fx-scale-y: 1.02; }
+
+.grid-poster { -fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 22; }
+
+.grid-badge {
+    -fx-background-color: rgba(0,0,0,0.55);
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: 900;
+    -fx-background-radius: 6;
+    -fx-padding: 2 6;
+}
+
+/* Play button like Hub */
+.grid-play {
+    -fx-background-color: rgba(0,0,0,0.35);
+    -fx-background-radius: 999;
+    -fx-min-width: 38px; -fx-min-height: 38px;
+    -fx-max-width: 38px; -fx-max-height: 38px;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-radius: 999;
+    -fx-border-width: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.2, 0, 2);
+}
+
+.grid-play-icon {
+    -fx-fill: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-translate-x: 1.2;
+}
+
+.play-pill{
+  -fx-background-color: rgba(0,0,0,0.40);
+  -fx-background-radius: 999;
+  -fx-min-width: 32px; -fx-min-height: 32px;
+  -fx-max-width: 32px; -fx-max-height: 32px;
+  -fx-border-color: rgba(255,255,255,0.35);
+  -fx-border-radius: 999;
+  -fx-border-width: 1;
+}
+.play-icon{
+  -fx-fill: white;
+  -fx-translate-x: 1;
+}
+.year-pill{
+  -fx-text-fill: white;
+  -fx-font-weight: 900;
+  -fx-font-size: 12px;
+}
+
+.grid-year { -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 900; }
+.grid-title { -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 900; }
+.grid-subtitle { -fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 9px; -fx-font-weight: 800; -fx-letter-spacing: 1px; }
+
+/* ================== POP EFFECTS (HOME + SEARCH + CATEGORY) ================== */
+
+/* Card hover: nhẹ, cuốn */
+.movie-card {
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 14, 0.2, 0, 6);
+}
+.movie-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(56,189,248,0.22), 22, 0.25, 0, 8);
+}
+
+/* Gradient đáy sâu hơn để chữ nổi */
+.card-gradient {
+    -fx-background-color: linear-gradient(to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.50) 45%,
+        rgba(0,0,0,0.00) 100%);
+}
+
+/* Text trên poster: nổi + “cinematic” */
+.card-year {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.70), 8, 0.25, 0, 2);
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 12.5px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.72), 10, 0.25, 0, 2);
+}
+
+.card-meta {
+    -fx-text-fill: rgba(255,255,255,0.70);
+    -fx-font-size: 9.5px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.60), 8, 0.2, 0, 1);
+}
+
+/* Badge không tràn / không đè */
+.badge-pill {
+    -fx-min-height: 22px;
+    -fx-alignment: CENTER;
+}
+
+
+/* HD nổi hơn một chút */
+.badge-quality {
+    -fx-background-color: rgba(0,0,0,0.52);
+}
+
+/* Vietsub/TM/LT ngắn gọn */
+.badge-lang {
+    -fx-padding: 3 10;
+}
+
+/* Tập/Hoàn tất nổi và đứng riêng */
+.badge-episode, .badge-complete {
+    -fx-padding: 3 10;
+}
+
+/* Hoàn tất */
+.badge-complete {
+    -fx-background-color: rgba(34,197,94,0.18);
+    -fx-border-color: rgba(34,197,94,0.38);
+}
+
+/* Hover badge hơi “pop” */
+.movie-card:hover .badge-pill {
+    -fx-effect: dropshadow(gaussian, rgba(56,189,248,0.20), 12, 0.25, 0, 2);
+}
+
+/* ===== Section bar (thanh xanh bên trái title) ===== */
+.section-bar{
+    -fx-min-width: 4px;
+    -fx-min-height: 18px;
+    -fx-background-color: #22d3ee;
+    -fx-background-radius: 2;
+}
+
+/* ===== Footer ===== */
+.footer-root{
+    -fx-padding: 0;
+}
+
+.footer-icon-btn{
+    -fx-background-color: transparent;
+    -fx-padding: 6;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.footer-icon-btn:hover{
+    -fx-background-color: rgba(255,255,255,0.07);
+}
+.footer-icon{
+    -fx-fill: rgba(255,255,255,0.65);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.footer-link{
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+.footer-link:hover{
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+
+.footer-divider{
+    -fx-min-height: 1px;
+    -fx-background-color: rgba(255,255,255,0.10);
+}
+
+.footer-copy{
+    -fx-text-fill: rgba(255,255,255,0.25);
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1px;
+}
+.footer-tagline{
+    -fx-text-fill: rgba(255,255,255,0.22);
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+}

@@ -3,84 +3,78 @@ package com.myapp.controller;
 import com.myapp.model.Movie;
 import com.myapp.service.MovieService;
 import com.myapp.util.SceneNavigator;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+import javafx.geometry.Rectangle2D;
 
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SearchResultsController {
-    @FXML private FlowPane resultContainer;
-    @FXML private TextField txtSearchInner;
-    @FXML private Label lblStatus;
+public class CategoryController {
+
+    @FXML private Label lbTitle;
+    @FXML private ScrollPane spGrid;
+    @FXML private TilePane gridContainer;
 
     private final MovieService movieService = new MovieService();
-    private final PauseTransition debounce = new PauseTransition(Duration.millis(500));
+    private String listSlug;
 
-    // Card size giống Home/Category
+    // ===== EXACT like HomeController.createMovieCard =====
     private static final double CARD_W = 140;
     private static final double CARD_H = 210;
 
-    // Cache ảnh (để scroll không reload liên tục)
     private static final Map<String, SoftReference<Image>> IMG_CACHE = new ConcurrentHashMap<>();
 
-    public void searchMovies(String keyword) {
-        txtSearchInner.setText(keyword);
-        lblStatus.setText("Kết quả cho: \"" + keyword + "\"");
-        executeSearch(keyword);
+    public void initialize() {
+        if (gridContainer == null) return;
+
+        gridContainer.setPrefColumns(2);
+        gridContainer.setHgap(18);
+        gridContainer.setVgap(22);
+
+        // tile size = card size (giống HOME)
+        gridContainer.setPrefTileWidth(CARD_W);
+        gridContainer.setPrefTileHeight(CARD_H);
     }
 
-    @FXML
-    private void handleSearchKeyReleased() {
-        debounce.setOnFinished(e -> {
-            String keyword = txtSearchInner.getText().trim();
-            if (keyword.length() >= 2) {
-                lblStatus.setText("Đang tìm: \"" + keyword + "\"");
-                executeSearch(keyword);
-            }
-        });
-        debounce.playFromStart();
+    public void initCategory(String title, String listSlug) {
+        this.listSlug = listSlug;
+        if (lbTitle != null) lbTitle.setText(title);
+        loadPage1();
     }
 
-    private void executeSearch(String keyword) {
+    private void loadPage1() {
+        final String slug = this.listSlug;
+        if (slug == null || slug.isBlank()) return;
+
         new Thread(() -> {
             try {
-                List<Movie> movies = movieService.getOphimClient().searchMovies(keyword, 1);
-
+                List<Movie> movies = movieService.getMoviesByList(slug, 1);
                 Platform.runLater(() -> {
-                    resultContainer.getChildren().clear();
-                    if (movies == null || movies.isEmpty()) {
-                        lblStatus.setText("Không tìm thấy phim nào cho \"" + keyword + "\"");
-                    } else {
-                        lblStatus.setText("Tìm thấy " + movies.size() + " kết quả cho \"" + keyword + "\"");
-                        for (Movie m : movies) {
-                            resultContainer.getChildren().add(createMovieCard(m));
-                        }
+                    gridContainer.getChildren().clear();
+                    if (movies == null) return;
+                    for (Movie m : movies) {
+                        gridContainer.getChildren().add(createHomeLikeCard(m));
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, "search-loader").start();
+        }, "category-loader-" + slug).start();
     }
 
-    private StackPane createMovieCard(Movie movie) {
+    // ===================== HOME-LIKE CARD =====================
+    private StackPane createHomeLikeCard(Movie movie) {
         StackPane card = new StackPane();
         card.getStyleClass().add("movie-card");
         card.setPrefSize(CARD_W, CARD_H);
@@ -88,19 +82,19 @@ public class SearchResultsController {
         ImageView poster = new ImageView();
         poster.setFitWidth(CARD_W);
         poster.setFitHeight(CARD_H);
-        poster.setPreserveRatio(true);
-        poster.setSmooth(true);
+        poster.setPreserveRatio(true);     // giữ tỉ lệ
+        poster.setSmooth(true);            // Home đang smooth true và nét vì ảnh gốc to
         poster.setCache(true);
         poster.setCacheHint(CacheHint.QUALITY);
 
-        // ✅ Ưu tiên poster -> thumb
-        String imgUrl = safe(movie.getFullPosterUrl());
-        if (imgUrl.isBlank()) imgUrl = safe(movie.getFullThumbUrl());
 
-        Image img = cachedImageHomeStyle(imgUrl);
+        String url = safe(movie.getFullPosterUrl());
+        if (url.isBlank()) url = safe(movie.getFullThumbUrl());
+
+        Image img = cachedImageHomeStyle(url);
         if (img != null) {
             poster.setImage(img);
-            applyCoverWhenReady(poster, img, CARD_W, CARD_H);
+            applyCoverWhenReady(poster, img, CARD_W, CARD_H); // cover-crop để "ăn khung"
         }
 
         Rectangle clip = new Rectangle(CARD_W, CARD_H);
@@ -108,13 +102,11 @@ public class SearchResultsController {
         clip.setArcHeight(20);
         poster.setClip(clip);
 
-        // Gradient đáy giống Home
         Region gradient = new Region();
         gradient.getStyleClass().add("card-gradient");
         gradient.setMaxHeight(CARD_H / 2.0);
         StackPane.setAlignment(gradient, Pos.BOTTOM_CENTER);
 
-        // Info box giống Home (Year + Title + Meta)
         VBox infoBox = new VBox(2);
         infoBox.getStyleClass().add("card-info");
         infoBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -134,7 +126,6 @@ public class SearchResultsController {
 
         infoBox.getChildren().addAll(lbYear, lbName, lbCate);
 
-        // Badges TOP-LEFT: HD + Vietsub/TM/LT giống Home
         HBox topLeftBadges = new HBox(6);
         topLeftBadges.setAlignment(Pos.TOP_LEFT);
         topLeftBadges.setMaxWidth(CARD_W - 52);
@@ -159,7 +150,6 @@ public class SearchResultsController {
             topLeftBadges.getChildren().add(bL);
         }
 
-        // Badge TOP-RIGHT: Tập/Hoàn tất giống Home
         Label bEp = null;
         String epBadge = buildEpisodeBadge(movie);
         if (!epBadge.isBlank()) {
@@ -172,68 +162,29 @@ public class SearchResultsController {
             StackPane.setMargin(bEp, new Insets(8, 8, 0, 8));
         }
 
-        // Build layer
         if (bEp != null) card.getChildren().addAll(poster, gradient, infoBox, topLeftBadges, bEp);
         else card.getChildren().addAll(poster, gradient, infoBox, topLeftBadges);
 
         card.setOnMouseClicked(e -> SceneNavigator.loadWatchScene(movie));
         return card;
     }
-    // ====== Load ảnh giống Home: new Image(url, true) => nét ======
+
     private static Image cachedImageHomeStyle(String url) {
         if (url == null || url.isBlank()) return null;
 
+        // cache theo URL giống Home (ảnh gốc -> nét)
         SoftReference<Image> ref = IMG_CACHE.get(url);
         Image img = (ref != null) ? ref.get() : null;
         if (img != null) return img;
 
-        img = new Image(url, true); // y hệt Home: nét
+        // Y HỆT HomeController.loadImageWithFallback: new Image(url, true)
+        img = new Image(url, true);
+
         IMG_CACHE.put(url, new SoftReference<>(img));
         return img;
     }
 
-    // ====== Cover crop khi ảnh load xong (fix ảnh ngang/letterbox) ======
-    private void applyCoverWhenReady(ImageView iv, Image img, double boxW, double boxH) {
-        if (img == null) return;
-
-        Runnable crop = () -> {
-            double iw = img.getWidth();
-            double ih = img.getHeight();
-            if (iw <= 0 || ih <= 0) return;
-
-            double boxRatio = boxW / boxH;
-            double imgRatio = iw / ih;
-
-            double vw, vh;
-            if (imgRatio > boxRatio) {
-                // ảnh quá rộng -> cắt 2 bên
-                vh = ih;
-                vw = ih * boxRatio;
-            } else {
-                // ảnh quá cao -> cắt trên/dưới
-                vw = iw;
-                vh = iw / boxRatio;
-            }
-
-            double vx = (iw - vw) / 2.0;
-            double vy = (ih - vh) / 2.0;
-
-            iv.setViewport(new Rectangle2D(vx, vy, vw, vh));
-        };
-
-        crop.run();
-        img.widthProperty().addListener((o, ov, nv) -> crop.run());
-        img.heightProperty().addListener((o, ov, nv) -> crop.run());
-        img.progressProperty().addListener((o, ov, nv) -> {
-            if (nv.doubleValue() >= 1.0) crop.run();
-        });
-    }
-
-    private String safe(String s) { return s == null ? "" : s; }
-
-    @FXML
-    private void goBack() { SceneNavigator.loadHome(); }
-
+    // ===== Helpers copy from HomeController style =====
     private String normalizeQuality(String raw) {
         if (raw == null) return "";
         String s = raw.trim();
@@ -303,5 +254,49 @@ public class SearchResultsController {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    private String safe(String s) { return s == null ? "" : s; }
+
+    @FXML
+    private void goBack() { SceneNavigator.loadHome(); }
+
+    private void applyCoverWhenReady(ImageView iv, Image img, double boxW, double boxH) {
+        if (img == null) return;
+
+        Runnable crop = () -> {
+            double iw = img.getWidth();
+            double ih = img.getHeight();
+            if (iw <= 0 || ih <= 0) return;
+
+            double boxRatio = boxW / boxH;
+            double imgRatio = iw / ih;
+
+            double vw, vh;
+            if (imgRatio > boxRatio) {
+                // ảnh quá rộng -> cắt 2 bên
+                vh = ih;
+                vw = ih * boxRatio;
+            } else {
+                // ảnh quá cao -> cắt trên/dưới
+                vw = iw;
+                vh = iw / boxRatio;
+            }
+
+            double vx = (iw - vw) / 2.0;
+            double vy = (ih - vh) / 2.0;
+
+            iv.setViewport(new Rectangle2D(vx, vy, vw, vh));
+        };
+
+        // thử crop ngay (nếu ảnh đã load xong)
+        crop.run();
+
+        // nếu ảnh load nền, crop khi ready
+        img.widthProperty().addListener((o, ov, nv) -> crop.run());
+        img.heightProperty().addListener((o, ov, nv) -> crop.run());
+        img.progressProperty().addListener((o, ov, nv) -> {
+            if (nv.doubleValue() >= 1.0) crop.run();
+        });
     }
 }
