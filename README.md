@@ -91,4 +91,6 @@ movieapp/
 - Cá nhân hóa: Lưu lịch sử xem của người dùng và cập nhật theo thời gian thực.
 - Xem phim, tua video, chỉnh tốc độ phát.
 ---
-## 📺 Giao diện ứng dụng (App Screenshots)
+## 📺 Giao diện ứng dụng (App Screenshots):
+
+
