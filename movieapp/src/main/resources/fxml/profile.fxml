@@ -34,13 +34,18 @@
                         <Button text="Đăng xuất" onAction="#handleLogout" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 8 20;"/>
                     </VBox>
 
-                    <VBox spacing="15">
-                        <Label text="PHIM ĐÃ XEM" styleClass="section-title"/>
-                        <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
-                            <HBox fx:id="historyContainer" spacing="15" prefHeight="200" style="-fx-padding: 10;">
-                                <alignment>CENTER_LEFT</alignment>
-                            </HBox>
-                        </ScrollPane>
+                    <VBox spacing="12">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Region style="-fx-min-width: 4; -fx-min-height: 18; -fx-background-color: #22d3ee; -fx-background-radius: 2;"/>
+                            <Label text="LỊCH SỬ XEM" styleClass="section-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+
+                            <Button text="XÓA TẤT CẢ" onAction="#onClearAllHistory"
+                                    style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #7dd3fc; -fx-font-weight: 800; -fx-background-radius: 8; -fx-padding: 6 12;"/>
+                        </HBox>
+
+                        <!-- list cards -->
+                        <VBox fx:id="historyContainer" spacing="12"/>
                     </VBox>
 
                 </VBox>

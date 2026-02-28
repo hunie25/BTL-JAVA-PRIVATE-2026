@@ -32,6 +32,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+
 public class WatchController {
 
     @FXML
@@ -91,8 +94,17 @@ public class WatchController {
     private final String PATH_VOL_OFF = "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z";
     private Movie movie;
 
+    // ===== Watch progress (real-time) =====
+    private int currentEpisodeIndex = 1;
+    private int resumeEpisodeIndex = 1;
+    private int resumePositionSeconds = 0;
+    private Timeline progressSaver;
+    private int lastSavedSecond = -1;
+
     public void initData(Movie movie) {
         this.movie = movie;
+        loadResumeProgress(movie);
+
         recordHistory(movie);
         if (mediaView != null && videoContainer != null) {
             mediaView.setPreserveRatio(true);
@@ -248,10 +260,17 @@ public class WatchController {
             bindMovieInfo(detail, movie);
 
             List<Episode.ServerData> eps = extractEpisodes(detail);
-            renderEpisodes(eps);
+
+            int selectedIdx = 0;
+            if (eps != null && !eps.isEmpty()) {
+                int epIdx = Math.max(1, Math.min(resumeEpisodeIndex, eps.size()));
+                selectedIdx = epIdx - 1;
+            }
+            renderEpisodes(eps, selectedIdx);
 
             if (eps != null && !eps.isEmpty()) {
-                playEpisode(eps.get(0));
+                int epIdx = selectedIdx + 1;
+                playEpisode(eps.get(selectedIdx), epIdx, resumePositionSeconds);
             }
         });
     }
@@ -297,11 +316,22 @@ public class WatchController {
     }
 
     private void playEpisode(Episode.ServerData ep) {
+        playEpisode(ep, 1, 0);
+    }
+
+    private void playEpisode(Episode.ServerData ep, int episodeIndex, int startSeconds) {
         if (ep == null) return;
-        cleanup();
+
+        // update current ep
+        this.currentEpisodeIndex = Math.max(1, episodeIndex);
+
+        cleanup(); // sẽ persist trước khi stop (ở bước H)
 
         String m3u8 = safe(ep.getLinkM3u8());
         String embed = safe(ep.getLinkEmbed());
+
+        // reset saved-second tracking for new episode
+        lastSavedSecond = -1;
 
         if (!m3u8.isBlank()) {
             try {
@@ -315,8 +345,18 @@ public class WatchController {
                 mediaPlayer = new MediaPlayer(media);
                 mediaView.setMediaPlayer(mediaPlayer);
 
+                final int seekSeconds = Math.max(0, startSeconds);
+
                 mediaPlayer.setOnReady(() -> {
+                    // seek to saved progress (if any)
+                    if (seekSeconds > 0) {
+                        try {
+                            mediaPlayer.seek(Duration.seconds(seekSeconds));
+                        } catch (Exception ignored) {}
+                    }
+
                     mediaPlayer.play();
+                    startProgressSaver(); // <-- realtime save
 
                     if (centerPlayBtn != null) centerPlayBtn.setVisible(false);
                     if (iconPlayPause != null) iconPlayPause.setContent(PATH_PAUSE);
@@ -342,6 +382,9 @@ public class WatchController {
                 });
 
                 mediaPlayer.setOnEndOfMedia(() -> {
+                    persistProgress(true); // save final
+                    stopProgressSaver();
+
                     if (iconPlayPause != null) iconPlayPause.setContent(PATH_PLAY);
                     if (centerPlayBtn != null) centerPlayBtn.setVisible(true);
                 });
@@ -353,6 +396,9 @@ public class WatchController {
             }
         }
 
+        // embed: không lấy được currentTime => chỉ lưu 0:00
+        stopProgressSaver();
+
         if (!embed.isBlank() && webEngine != null) {
             if (mediaView != null) mediaView.setVisible(false);
             webView.setVisible(true);
@@ -361,10 +407,12 @@ public class WatchController {
 
             if (centerPlayBtn != null) centerPlayBtn.setVisible(true);
             if (iconPlayPause != null) iconPlayPause.setContent(PATH_PLAY);
+
+            persistProgress(true);
         }
     }
 
-    private void renderEpisodes(List<Episode.ServerData> episodes) {
+    private void renderEpisodes(List<Episode.ServerData> episodes, int selectedIndex) {
         if (episodeContainer == null) return;
 
         episodeContainer.getChildren().clear();
@@ -381,16 +429,19 @@ public class WatchController {
             String label = safe(ep.getName());
             if (label.isBlank()) label = "Tập " + (i + 1);
 
+            final int epIndex = i + 1;
+
             Button btn = new Button(label);
             btn.getStyleClass().add("episode-square-btn");
 
             btn.setOnAction(e -> {
-                playEpisode(ep);
+                playEpisode(ep, epIndex, 0);
+
                 episodeContainer.getChildren().forEach(n -> n.getStyleClass().remove("episode-active"));
                 btn.getStyleClass().add("episode-active");
             });
 
-            if (i == 0) btn.getStyleClass().add("episode-active");
+            if (i == selectedIndex) btn.getStyleClass().add("episode-active");
             episodeContainer.getChildren().add(btn);
         }
     }
@@ -485,6 +536,7 @@ public class WatchController {
                     mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(progressSlider.getValue() / 100.0));
                 }
                 isSliding = false;
+                persistProgress(true);
             });
         }
     }
@@ -515,12 +567,15 @@ public class WatchController {
 
         if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.pause();
+            persistProgress(true);
+            stopProgressSaver();
             if (iconPlayPause != null) iconPlayPause.setContent(PATH_PLAY);
             if (centerPlayBtn != null) centerPlayBtn.setVisible(true);
             onUserInteraction(null);
             if (hideControlsTimer != null) hideControlsTimer.stop();
         } else {
             mediaPlayer.play();
+            startProgressSaver();
             if (iconPlayPause != null) iconPlayPause.setContent(PATH_PAUSE);
             if (centerPlayBtn != null) centerPlayBtn.setVisible(false);
             if (hideControlsTimer != null) hideControlsTimer.playFromStart();
@@ -593,6 +648,8 @@ public class WatchController {
     }
 
     private void cleanup() {
+        persistProgress(true);
+        stopProgressSaver();
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
@@ -708,5 +765,71 @@ public class WatchController {
         } else {
             System.out.println("ℹ️ Người dùng chưa đăng nhập, không lưu lịch sử.");
         }
+
+    }
+
+    private void loadResumeProgress(Movie movie) {
+        User user = SessionManager.getUser();
+        if (user == null || movie == null || movie.getSlug() == null || movie.getSlug().isBlank()) return;
+
+        try {
+            HistoryDAO.ProgressInfo p = new HistoryDAO().getProgress(user.getId(), movie.getSlug());
+            if (p != null) {
+                resumeEpisodeIndex = Math.max(1, p.episodeIndex);
+                resumePositionSeconds = Math.max(0, p.positionSeconds);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private void startProgressSaver() {
+        stopProgressSaver();
+        if (mediaPlayer == null) return;
+
+        progressSaver = new Timeline(new KeyFrame(Duration.seconds(3), e -> persistProgress(false)));
+        progressSaver.setCycleCount(Timeline.INDEFINITE);
+        progressSaver.play();
+    }
+
+    private void stopProgressSaver() {
+        if (progressSaver != null) {
+            try { progressSaver.stop(); } catch (Exception ignored) {}
+            progressSaver = null;
+        }
+    }
+
+    private void persistProgress(boolean force) {
+        User user = SessionManager.getUser();
+        if (user == null || movie == null || movie.getSlug() == null) return;
+
+        int pos = 0, dur = 0;
+
+        try {
+            if (mediaPlayer != null) {
+                Duration now = mediaPlayer.getCurrentTime();
+                Duration total = mediaPlayer.getTotalDuration();
+
+                pos = (now == null) ? 0 : (int) Math.floor(now.toSeconds());
+                if (total != null && !total.isUnknown()) {
+                    dur = (int) Math.floor(total.toSeconds());
+                }
+            }
+        } catch (Exception ignored) {}
+
+        if (!force && lastSavedSecond >= 0 && Math.abs(pos - lastSavedSecond) < 2) return;
+        lastSavedSecond = pos;
+
+        final int fPos = Math.max(0, pos);
+        final int fDur = Math.max(0, dur);
+        final int epIndex = Math.max(1, currentEpisodeIndex);
+
+        new Thread(() -> {
+            try {
+                String slug = movie.getSlug();
+                String name = (movie.getName() != null) ? movie.getName() : "Phim không tên";
+                String thumb = (movie.getThumbUrl() != null) ? movie.getThumbUrl() : "";
+
+                new HistoryDAO().saveOrUpdate(user.getId(), slug, name, thumb, epIndex, fPos, fDur);
+            } catch (Exception ignored) {}
+        }).start();
     }
 }

@@ -63,6 +63,21 @@ public class Movie {
     @JsonProperty("episodes")
     private List<Episode> episodes = new ArrayList<>();
 
+    private Integer historyEpisodeIndex = 1;
+    private Integer historyPositionSeconds = 0;
+    private Integer historyDurationSeconds = 0;
+    private String historyViewedAt; // raw timestamp string
+
+    public Integer getHistoryEpisodeIndex() { return historyEpisodeIndex; }
+    public Integer getHistoryPositionSeconds() { return historyPositionSeconds; }
+    public Integer getHistoryDurationSeconds() { return historyDurationSeconds; }
+    public String getHistoryViewedAt() { return historyViewedAt; }
+
+    public void setHistoryEpisodeIndex(Integer v) { this.historyEpisodeIndex = v; }
+    public void setHistoryPositionSeconds(Integer v) { this.historyPositionSeconds = v; }
+    public void setHistoryDurationSeconds(Integer v) { this.historyDurationSeconds = v; }
+    public void setHistoryViewedAt(String v) { this.historyViewedAt = v; }
+
     public String getId() { return id; }
     public String getName() { return name; }
     public String getOriginName() { return originName; }
@@ -91,20 +106,30 @@ public class Movie {
     }
 
     private String toFullImageUrl(String raw) {
-        if (raw == null || raw.isBlank()) return null;
+        if (raw == null) return null;
         String v = raw.trim();
+        if (v.isEmpty()) return null;
 
         if (v.startsWith("http://") || v.startsWith("https://")) return v;
+        if (v.startsWith("//")) return "https:" + v;
 
-        if (v.startsWith("/uploads/")) {
-            return "https://ophim1.com" + v;
+        v = v.replace("\\", "/");
+
+        if (v.startsWith("/t/p/")) {
+            return "https://image.tmdb.org" + v;
         }
+
+        final String IMG_HOST = "https://img.ophim.live";
+
+        if (v.startsWith("uploads/")) v = "/" + v;
+        if (v.startsWith("/uploads/")) return IMG_HOST + v;
 
         if (v.startsWith("/")) {
-            return "https://img.ophim.cc/uploads/movies" + v;
+            if (v.startsWith("/movies/")) return IMG_HOST + "/uploads" + v;
+            return IMG_HOST + "/uploads/movies" + v;
         }
 
-        return "https://img.ophim.cc/uploads/movies/" + v;
+        return IMG_HOST + "/uploads/movies/" + v;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

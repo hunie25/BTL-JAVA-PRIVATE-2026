@@ -6,20 +6,24 @@ import com.myapp.model.User;
 import com.myapp.util.SceneNavigator;
 import com.myapp.util.SessionManager;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.StackPane;
-import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProfileController {
-    @FXML
-    private Label lblUsername, lblEmail;
-    @FXML private HBox historyContainer;
+
+    @FXML private Label lblUsername, lblEmail;
+    @FXML private VBox historyContainer;
+
+    private final HistoryDAO dao = new HistoryDAO();
 
     public void initialize() {
         User user = SessionManager.getUser();
@@ -31,64 +35,102 @@ public class ProfileController {
     }
 
     private void loadHistory(int userId) {
-        HistoryDAO dao = new HistoryDAO();
         List<Movie> history = dao.getWatchHistory(userId);
-
         historyContainer.getChildren().clear();
+
         for (Movie m : history) {
-            VBox card = createHistoryCard(m, userId);
-            historyContainer.getChildren().add(card);
+            historyContainer.getChildren().add(createHistoryRow(m, userId));
         }
     }
 
-    private VBox createHistoryCard(Movie m, int userId) {
-        VBox card = new VBox();
-        card.setSpacing(5);
-        card.setAlignment(Pos.TOP_CENTER);
+    private HBox createHistoryRow(Movie m, int userId) {
+        HBox row = new HBox();
+        row.setSpacing(12);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: rgba(255,255,255,0.04); -fx-background-radius: 14; -fx-padding: 12;");
 
-        StackPane imagePane = new StackPane();
-        ImageView img = new ImageView();
-        img.setFitWidth(100);
-        img.setFitHeight(150);
+        ImageView poster = new ImageView();
+        poster.setFitWidth(86);
+        poster.setFitHeight(110);
+        poster.setPreserveRatio(true);
 
-        String fullUrl = m.getFullThumbUrl();
-        if (fullUrl != null && fullUrl.contains("-poster.jpg")) {
-            fullUrl = fullUrl.replace("-poster.jpg", "-thumb.jpg");
+        String url = m.getFullPosterUrl();
+        if (url == null || url.isBlank()) url = m.getFullThumbUrl();
+
+        if (url != null && !url.isBlank()) {
+            try { poster.setImage(new Image(url, true)); } catch (Exception ignored) {}
         }
 
-        if (fullUrl != null && !fullUrl.isBlank()) {
-            try {
-                img.setImage(new Image(fullUrl, true));
-            } catch (Exception e) {
-                System.err.println("Lỗi nạp ảnh: " + fullUrl);
-            }
-        }
+        poster.setCursor(Cursor.HAND);
+        poster.setOnMouseClicked(e -> SceneNavigator.loadWatchScene(m));
 
-        img.setOnMouseClicked(e -> SceneNavigator.loadWatchScene(m));
-        img.setCursor(javafx.scene.Cursor.HAND);
+        VBox info = new VBox();
+        info.setSpacing(6);
+        info.setAlignment(Pos.CENTER_LEFT);
 
-        Button btnDelete = new Button("✕");
-        btnDelete.setStyle("-fx-background-color: rgba(255,0,0,0.7); -fx-text-fill: white; " +
-                "-fx-background-radius: 10; -fx-font-size: 10px; -fx-padding: 2 5;");
-        btnDelete.setTranslateX(35);
-        btnDelete.setTranslateY(-60);
+        Label title = new Label(m.getName() != null ? m.getName() : "");
+        title.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 900;");
+        title.setWrapText(true);
+        title.setMaxWidth(190);
 
-        btnDelete.setOnAction(e -> {
-            HistoryDAO dao = new HistoryDAO();
+        int ep = m.getHistoryEpisodeIndex() != null ? m.getHistoryEpisodeIndex() : 1;
+        int pos = m.getHistoryPositionSeconds() != null ? m.getHistoryPositionSeconds() : 0;
+
+        Label meta = new Label("ĐANG XEM: " + ep + "  •  " + formatClock(pos));
+        meta.setStyle("-fx-text-fill: #38bdf8; -fx-font-size: 12px; -fx-font-weight: 800;");
+
+        Label time = new Label(formatViewedAt(m.getHistoryViewedAt()));
+        time.setStyle("-fx-text-fill: rgba(255,255,255,0.55); -fx-font-size: 12px; -fx-font-weight: 600;");
+
+        info.getChildren().addAll(title, meta, time);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button btnDel = new Button("🗑");
+        btnDel.setStyle("-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 16px;");
+        btnDel.setCursor(Cursor.HAND);
+        btnDel.setOnAction(e -> {
             dao.deleteHistory(userId, m.getSlug());
             loadHistory(userId);
         });
 
-        imagePane.getChildren().addAll(img, btnDelete);
+        row.getChildren().addAll(poster, info, spacer, btnDel);
+        row.setOnMouseClicked(e -> SceneNavigator.loadWatchScene(m));
+        row.setCursor(Cursor.HAND);
 
-        Label title = new Label(m.getName());
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;");
-        title.setWrapText(true);
-        title.setMaxWidth(100);
-        title.setAlignment(Pos.CENTER);
+        return row;
+    }
 
-        card.getChildren().addAll(imagePane, title);
-        return card;
+    private String formatClock(int seconds) {
+        seconds = Math.max(0, seconds);
+        int m = seconds / 60;
+        int s = seconds % 60;
+        return String.format("%d:%02d", m, s);
+    }
+
+    private String formatViewedAt(String raw) {
+        if (raw == null || raw.isBlank()) return "";
+
+        String s = raw.trim().replace("T", " ");
+        if (s.contains(".")) s = s.substring(0, s.indexOf('.'));
+
+        try {
+            DateTimeFormatter in = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dt = LocalDateTime.parse(s, in);
+            DateTimeFormatter out = DateTimeFormatter.ofPattern("HH:mm:ss d/M/yyyy");
+            return dt.format(out);
+        } catch (Exception e) {
+            return s;
+        }
+    }
+
+    @FXML void onClearAllHistory() {
+        User user = SessionManager.getUser();
+        if (user == null) return;
+
+        dao.clearAllHistory(user.getId());
+        loadHistory(user.getId());
     }
 
     @FXML void goBack() { SceneNavigator.loadHome(); }

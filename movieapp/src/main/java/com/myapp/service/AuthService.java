@@ -14,18 +14,22 @@ public class AuthService {
     private final UserDAO userDAO = new UserDAO();
     private final OtpService otpService = new OtpService();
 
-    public User login(String username, String password) throws Exception {
-        User user = userDAO.findByUsername(username);
+    public User login(String identity, String password) throws Exception {
+        String key = identity == null ? "" : identity.trim();
+        if (key.isEmpty()) throw new Exception("Vui lòng nhập email hoặc tên đăng nhập!");
 
-        if (user == null) {
-            throw new Exception("Tên đăng nhập không tồn tại!");
+        User user;
+        if (EMAIL_PATTERN.matcher(key).matches() || key.contains("@")) {
+            user = userDAO.findByEmail(key);
+            if (user == null) user = userDAO.findByUsername(key); // fallback
+        } else {
+            user = userDAO.findByUsername(key);
+            if (user == null) user = userDAO.findByEmail(key); // fallback
         }
-        if (!user.getPassword().equals(password)) {
-            throw new Exception("Mật khẩu không chính xác!");
-        }
-        if (!user.isVerified()) {
-            throw new Exception("Tài khoản chưa được kích hoạt OTP!");
-        }
+
+        if (user == null) throw new Exception("Tên đăng nhập hoặc email không tồn tại!");
+        if (!user.getPassword().equals(password)) throw new Exception("Mật khẩu không chính xác!");
+        if (!user.isVerified()) throw new Exception("Tài khoản chưa được kích hoạt!");
 
         return user;
     }
