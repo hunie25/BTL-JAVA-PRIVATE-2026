@@ -1,5 +1,11 @@
-.idea/
+# Maven
 target/
-*.iml
-*.zip
+
+# Java
 *.class
+
+# IDE
+.idea/
+.vscode/
+
+.DS_Store

@@ -1,0 +1,530 @@
+/* ================================================================= */
+/* 1. CORE THEME & GLOBAL STYLES                                     */
+/* ================================================================= */
+.root {
+    -fx-background-color: #020617; /* Slate-950 (Màu nền chủ đạo) */
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+.desktop-background { -fx-background-color: #121212; }
+
+/* Khung giả lập điện thoại */
+.mobile-device {
+    -fx-border-color: #333333;
+    -fx-border-width: 2;
+    -fx-border-radius: 35;
+    -fx-background-radius: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 4);
+    -fx-background-color: #020617;
+}
+
+/* ScrollPane: Ẩn thanh cuộn nhưng vẫn vuốt được */
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+/* ================================================================= */
+/* 2. HOME SCREEN STYLES (GIỮ NGUYÊN ĐỂ KHÔNG LỖI HOME)              */
+/* ================================================================= */
+.header-overlay {
+    -fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    -fx-padding: 20 20 10 20;
+}
+.logo-hub {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black", "Segoe UI Black";
+    -fx-font-weight: 900;
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 4, 0, 0, 1);
+}
+.logo-films {
+    -fx-text-fill: #94a3b8;
+    -fx-font-family: "Segoe UI", "Arial";
+    -fx-font-weight: 700;
+    -fx-font-size: 8px;
+    -fx-letter-spacing: 2px;
+    -fx-padding: -4 0 0 1;
+}
+
+.hero-title {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: 900;
+    -fx-font-family: "Segoe UI Black", "Arial Black", system-ui;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.8), 20, 0.3, 0, 2);
+    -fx-wrap-text: true;
+    -fx-line-spacing: -2px;
+}
+.hero-badge-top { -fx-background-color: linear-gradient(to right, #0ea5e9, #22d3ee); -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 9px; -fx-background-radius: 4; -fx-padding: 2 6; }
+.hero-meta-text { -fx-text-fill: #cbd5e1; -fx-font-size: 11px; -fx-font-weight: 700; }
+.hero-year-highlight { -fx-text-fill: #22d3ee; -fx-font-weight: 900; -fx-font-size: 12px; }
+.badge-hd { -fx-border-color: rgba(255,255,255,0.5); -fx-border-radius: 4; -fx-border-width: 1.5; -fx-text-fill: white; -fx-font-size: 8px; -fx-font-weight: 900; -fx-padding: 1 5; }
+
+.btn-hero-play-side { -fx-background-color: linear-gradient(to bottom right, #4f46e5, #06b6d4); -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-cursor: hand; }
+
+.indicator-container { -fx-cursor: hand; -fx-alignment: CENTER_LEFT; }
+.indicator-track { -fx-fill: rgba(255, 255, 255, 0.2); -fx-arc-width: 10; -fx-arc-height: 10; }
+.indicator-bar { -fx-fill: linear-gradient(to right, #22d3ee, #3b82f6); -fx-arc-width: 10; -fx-arc-height: 10; -fx-effect: dropshadow(gaussian, rgba(34,211,238,0.6), 8, 0, 0, 0); }
+
+.movie-card { -fx-background-color: transparent; -fx-cursor: hand; }
+.movie-card:hover { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+.section-title { -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 900; }
+
+.bottom-nav { -fx-background-color: rgba(2, 6, 23, 0.98); -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0; -fx-padding: 12 20 15 20; }
+.nav-btn { -fx-background-color: transparent; -fx-content-display: TOP; -fx-text-fill: #64748b; -fx-font-size: 9px; -fx-font-weight: 700; }
+.nav-btn-active { -fx-text-fill: #22d3ee; }
+.nav-icon { -fx-fill: #64748b; } .nav-icon-active { -fx-fill: #22d3ee; }
+.progress-indicator { -fx-progress-color: #22d3ee; }
+
+.btn-icon-transparent { -fx-background-color: transparent; -fx-cursor: hand; }
+.btn-icon-transparent:hover { -fx-scale-x: 1.1; -fx-scale-y: 1.1; }
+.user-avatar-bg { -fx-background-color: linear-gradient(to bottom right, #3b82f6, #2563eb); -fx-background-radius: 50%; -fx-min-width: 32px; -fx-min-height: 32px; -fx-max-width: 32px; -fx-max-height: 32px; }
+
+
+/* ================================================================= */
+/* 3. WATCH SCREEN STYLES (GIAO DIỆN XEM PHIM CHUẨN)                 */
+/* ================================================================= */
+
+/* --- TYPOGRAPHY (Tiêu đề & Chữ) --- */
+.movie-title-large {
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI Black", "Arial Black";
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 2, 0, 0, 1);
+}
+.section-label {
+    -fx-text-fill: #94a3b8; /* Slate-400 */
+    -fx-font-weight: 800;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1px;
+}
+.text-meta {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+.text-desc {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 4px;
+}
+
+/* --- TAGS (Badges) --- */
+.tag-quality {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-font-size: 9px;
+    -fx-padding: 2 6;
+    -fx-background-radius: 4;
+}
+
+/* --- NÚT CHỌN TẬP PHIM (VUÔNG BO GÓC) --- */
+.episode-square-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #cbd5e1;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px; /* Vuông vức */
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 8;
+}
+.episode-square-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+}
+/* Trạng thái tập đang được chọn */
+.episode-active {
+    -fx-background-color: #22d3ee; /* Màu Cyan chủ đạo */
+    -fx-text-fill: #020617; /* Chữ đen */
+    -fx-font-weight: 900;
+    -fx-border-color: #22d3ee;
+    -fx-effect: dropshadow(gaussian, rgba(34, 211, 238, 0.4), 10, 0, 0, 0);
+}
+
+/* --- VIDEO CONTROLS (Nút bấm trên Player) --- */
+.btn-play-center {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-radius: 50%;
+    -fx-min-width: 60px; -fx-min-height: 60px;
+    -fx-max-width: 60px; -fx-max-height: 60px;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER; /* Căn giữa nội dung icon */
+}
+.btn-play-center:hover {
+    -fx-background-color: rgba(34, 211, 238, 0.8);
+    -fx-border-color: #22d3ee;
+    -fx-scale-x: 1.1; -fx-scale-y: 1.1;
+}
+
+/* Nút dạng chữ (ví dụ 1.0x) */
+.btn-text-action {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+.btn-text-action:hover { -fx-text-fill: #22d3ee; }
+
+/* --- SLIDERS (THANH KÉO MỎNG) --- */
+.video-slider .track {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-pref-height: 3px; /* Siêu mỏng */
+    -fx-background-radius: 5px;
+}
+.video-slider .thumb {
+    -fx-background-color: #22d3ee;
+    -fx-pref-width: 12px; -fx-pref-height: 12px;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(34,211,238,0.8), 5, 0, 0, 0);
+}
+.video-slider:hover .thumb {
+    -fx-scale-x: 1.2; -fx-scale-y: 1.2;
+    -fx-background-color: white;
+}
+
+/* Slider âm lượng nhỏ hơn */
+.volume-slider .track { -fx-background-color: rgba(255,255,255,0.2); -fx-pref-height: 3px; }
+.volume-slider .thumb { -fx-background-color: white; -fx-pref-width: 10px; -fx-pref-height: 10px; }
+
+/* --- SPEED MENU POPUP --- */
+.speed-menu-box {
+    -fx-background-color: rgba(15, 23, 42, 0.95);
+    -fx-background-radius: 8;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+/* Nút trong menu tốc độ */
+.speed-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 11px;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-min-width: 100px;
+}
+.speed-item:hover {
+    -fx-background-color: rgba(34, 211, 238, 0.15); /* Hover màu Cyan nhạt */
+    -fx-text-fill: white;
+}
+
+/* Hiệu ứng kính mờ cho khung nội dung */
+.glass-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-radius: 12;
+    -fx-padding: 15;
+}
+
+.btn-back-collapse {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-radius: 50%;
+    -fx-min-width: 36px; -fx-min-height: 36px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 50%;
+}
+.btn-back-collapse:hover {
+    -fx-background-color: rgba(34, 211, 238, 0.2);
+    -fx-border-color: #22d3ee;
+}
+
+/* 2. Controls Bar (Gradient đen từ dưới lên giống YouTube) */
+.player-controls-gradient {
+    -fx-background-color: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+    -fx-padding: 0 15 10 15; /* Padding chuẩn */
+}
+
+/* 3. Nút bấm Player (Icon trắng, Hover Cyan) */
+.btn-player-icon {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 8;
+}
+
+.btn-player-icon:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 50%;
+}
+.btn-player-icon:pressed { -fx-text-fill: #22d3ee; }
+
+/* 4. Poster Carousel (Lướt ngang ở cuối trang) */
+/* Poster cuối trang */
+.poster-item {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+.poster-item:hover { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+
+/* --- LABEL ÂM LƯỢNG (MỚI) --- */
+.volume-text {
+    -fx-text-fill: #22d3ee; /* Màu Cyan */
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-min-width: 25px; /* Để số không bị nhảy lung tung */
+    -fx-alignment: CENTER_RIGHT;
+}
+
+/* --- SETTINGS MENU --- */
+.settings-menu-box {
+    -fx-background-color: rgba(20, 20, 20, 0.95);
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 8;
+}
+/* Slider âm lượng nhỏ gọn */
+.volume-slider .track {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-pref-height: 3px;
+}
+.volume-slider .thumb {
+    -fx-background-color: white;
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
+    -fx-background-radius: 50%;
+}
+.volume-slider:hover .thumb {
+    -fx-scale-x: 1.2; -fx-scale-y: 1.2;
+}
+
+/* ======================= EXPLORE OVERLAY ======================= */
+.explore-overlay { -fx-background-color: transparent; }
+.explore-backdrop { -fx-background-color: rgba(0,0,0,0.70); }
+
+.explore-panel {
+    -fx-background-color: rgba(0,0,0,0.92);
+    -fx-background-radius: 22;
+    -fx-padding: 22 22 18 22;
+    -fx-pref-width: 340;
+    -fx-max-height: 640;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 20, 0.25, 0, 4);
+}
+
+.explore-title { -fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: 900; }
+
+.explore-close-btn { -fx-background-color: transparent; -fx-padding: 6; -fx-cursor: hand; }
+.explore-close-btn:hover { -fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 10; }
+.explore-close-icon { -fx-fill: rgba(255,255,255,0.55); }
+
+.explore-grid { -fx-padding: 10 0 0 0; }
+
+.explore-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 16px;
+    -fx-font-weight: 750;
+    -fx-padding: 10 0;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+.explore-item:hover { -fx-text-fill: rgba(255,255,255,0.90); }
+
+/* ======================= CATEGORY GRID ======================= */
+.category-header { -fx-padding: 10 20 6 20; }
+.category-bar { -fx-min-width: 4px; -fx-min-height: 18px; -fx-background-color: #22d3ee; -fx-background-radius: 2; }
+.category-title { -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: 900; }
+
+.grid-cell { -fx-background-color: transparent; -fx-cursor: hand; }
+.grid-cell:hover { -fx-scale-x: 1.02; -fx-scale-y: 1.02; }
+
+.grid-poster { -fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 22; }
+
+.grid-badge {
+    -fx-background-color: rgba(0,0,0,0.55);
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: 900;
+    -fx-background-radius: 6;
+    -fx-padding: 2 6;
+}
+
+/* Play button like Hub */
+.grid-play {
+    -fx-background-color: rgba(0,0,0,0.35);
+    -fx-background-radius: 999;
+    -fx-min-width: 38px; -fx-min-height: 38px;
+    -fx-max-width: 38px; -fx-max-height: 38px;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-radius: 999;
+    -fx-border-width: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.2, 0, 2);
+}
+
+.grid-play-icon {
+    -fx-fill: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-translate-x: 1.2;
+}
+
+.play-pill{
+  -fx-background-color: rgba(0,0,0,0.40);
+  -fx-background-radius: 999;
+  -fx-min-width: 32px; -fx-min-height: 32px;
+  -fx-max-width: 32px; -fx-max-height: 32px;
+  -fx-border-color: rgba(255,255,255,0.35);
+  -fx-border-radius: 999;
+  -fx-border-width: 1;
+}
+.play-icon{
+  -fx-fill: white;
+  -fx-translate-x: 1;
+}
+.year-pill{
+  -fx-text-fill: white;
+  -fx-font-weight: 900;
+  -fx-font-size: 12px;
+}
+
+.grid-year { -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 900; }
+.grid-title { -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 900; }
+.grid-subtitle { -fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 9px; -fx-font-weight: 800; -fx-letter-spacing: 1px; }
+
+/* ================== POP EFFECTS (HOME + SEARCH + CATEGORY) ================== */
+
+/* Card hover: nhẹ, cuốn */
+.movie-card {
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 14, 0.2, 0, 6);
+}
+.movie-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(56,189,248,0.22), 22, 0.25, 0, 8);
+}
+
+/* Gradient đáy sâu hơn để chữ nổi */
+.card-gradient {
+    -fx-background-color: linear-gradient(to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.50) 45%,
+        rgba(0,0,0,0.00) 100%);
+}
+
+/* Text trên poster: nổi + “cinematic” */
+.card-year {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.70), 8, 0.25, 0, 2);
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 12.5px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.72), 10, 0.25, 0, 2);
+}
+
+.card-meta {
+    -fx-text-fill: rgba(255,255,255,0.70);
+    -fx-font-size: 9.5px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.60), 8, 0.2, 0, 1);
+}
+
+/* Badge không tràn / không đè */
+.badge-pill {
+    -fx-min-height: 22px;
+    -fx-alignment: CENTER;
+}
+
+
+/* HD nổi hơn một chút */
+.badge-quality {
+    -fx-background-color: rgba(0,0,0,0.52);
+}
+
+/* Vietsub/TM/LT ngắn gọn */
+.badge-lang {
+    -fx-padding: 3 10;
+}
+
+/* Tập/Hoàn tất nổi và đứng riêng */
+.badge-episode, .badge-complete {
+    -fx-padding: 3 10;
+}
+
+/* Hoàn tất */
+.badge-complete {
+    -fx-background-color: rgba(34,197,94,0.18);
+    -fx-border-color: rgba(34,197,94,0.38);
+}
+
+/* Hover badge hơi “pop” */
+.movie-card:hover .badge-pill {
+    -fx-effect: dropshadow(gaussian, rgba(56,189,248,0.20), 12, 0.25, 0, 2);
+}
+
+/* ===== Section bar (thanh xanh bên trái title) ===== */
+.section-bar{
+    -fx-min-width: 4px;
+    -fx-min-height: 18px;
+    -fx-background-color: #22d3ee;
+    -fx-background-radius: 2;
+}
+
+/* ===== Footer ===== */
+.footer-root{
+    -fx-padding: 0;
+}
+
+.footer-icon-btn{
+    -fx-background-color: transparent;
+    -fx-padding: 6;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.footer-icon-btn:hover{
+    -fx-background-color: rgba(255,255,255,0.07);
+}
+.footer-icon{
+    -fx-fill: rgba(255,255,255,0.65);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.footer-link{
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+.footer-link:hover{
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+
+.footer-divider{
+    -fx-min-height: 1px;
+    -fx-background-color: rgba(255,255,255,0.10);
+}
+
+.footer-copy{
+    -fx-text-fill: rgba(255,255,255,0.25);
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1px;
+}
+.footer-tagline{
+    -fx-text-fill: rgba(255,255,255,0.22);
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+}

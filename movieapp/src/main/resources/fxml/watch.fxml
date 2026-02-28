@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.web.WebView?>
+
+<?import javafx.geometry.Insets?>
+<StackPane fx:id="rootStack" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.myapp.controller.WatchController"
+           styleClass="desktop-background"
+           stylesheets="@../css/app.css">
+
+    <BorderPane fx:id="phoneFrame" styleClass="mobile-device"
+                maxWidth="375" maxHeight="812"
+                style="-fx-background-color: #020617;">
+
+        <top>
+            <VBox fx:id="playerWrapper" style="-fx-background-color: black;" alignment="CENTER">
+
+                <StackPane fx:id="videoContainer" alignment="CENTER"
+                           onMouseMoved="#onUserInteraction"
+                           onMouseClicked="#onVideoClick"
+                           minHeight="240" prefHeight="240" maxHeight="240">
+
+                    <MediaView fx:id="mediaView" preserveRatio="true"/>
+                    <WebView fx:id="webView" prefHeight="240" maxWidth="Infinity" visible="false"/>
+
+                    <VBox fx:id="overlayGradient" visible="false" mouseTransparent="true">
+                        <Region VBox.vgrow="ALWAYS" style="-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 40%);"/>
+                        <Region VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;"/>
+                        <Region VBox.vgrow="ALWAYS" style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.9), transparent 30%);"/>
+                    </VBox>
+
+                    <BorderPane fx:id="controlsPane" visible="false">
+                        <top>
+                            <HBox alignment="CENTER_LEFT" style="-fx-padding: 15;">
+                                <Button styleClass="btn-back-collapse" onAction="#animateAndClose">
+                                    <graphic><SVGPath content="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" fill="white" scaleX="1.6" scaleY="1.6"/></graphic>
+                                </Button>
+                            </HBox>
+                        </top>
+
+                        <center>
+                            <Button fx:id="centerPlayBtn" styleClass="btn-play-center" onAction="#togglePlay" visible="false">
+                                <graphic><SVGPath content="M8 5v14l11-7z" fill="white" scaleX="2.5" scaleY="2.5" translateX="2"/></graphic>
+                            </Button>
+                        </center>
+
+                        <bottom>
+                            <VBox styleClass="player-controls-gradient" spacing="0">
+                                <Slider fx:id="progressSlider" styleClass="video-slider"/>
+
+                                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 8 0 5 0;">
+                                    <Button styleClass="btn-icon-transparent" onAction="#togglePlay">
+                                        <graphic><SVGPath fx:id="iconPlayPause" content="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white"/></graphic>
+                                    </Button>
+
+                                    <HBox alignment="CENTER_LEFT" spacing="5">
+                                        <Button styleClass="btn-icon-transparent" onAction="#toggleMute">
+                                            <graphic><SVGPath fx:id="iconVolume" content="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="white"/></graphic>
+                                        </Button>
+                                        <Slider fx:id="volumeSlider" styleClass="volume-slider" min="0" max="1" value="1" prefWidth="50"/>
+                                        <Label fx:id="lblVolume" text="100%" styleClass="volume-text"/>
+                                    </HBox>
+
+                                    <Label fx:id="lblDuration" text="00:00 / 00:00" style="-fx-text-fill: #e2e8f0; -fx-font-size: 10px;"/>
+
+                                    <Region HBox.hgrow="ALWAYS"/>
+
+                                    <Button styleClass="btn-icon-transparent" onAction="#toggleSettingsMenu">
+                                        <graphic><SVGPath content="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.27.41.48.41h3.84c.21 0 .43-.17.48-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="white"/></graphic>
+                                    </Button>
+
+                                    <Button styleClass="btn-icon-transparent" onAction="#toggleFullscreen">
+                                        <graphic><SVGPath content="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="white"/></graphic>
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </bottom>
+                    </BorderPane>
+
+                    <ProgressIndicator fx:id="loadingSpinner" visible="false" maxWidth="40"/>
+
+                    <VBox fx:id="settingsMenu" visible="false" styleClass="settings-menu-box"
+                          StackPane.alignment="BOTTOM_RIGHT" maxWidth="120">
+                        <StackPane.margin>
+                            <Insets bottom="55" right="10"/> </StackPane.margin>
+                        <Label text="Tốc độ phát" style="-fx-text-fill: #94a3b8; -fx-font-size: 10px; -fx-padding: 0 0 5 15;"/>
+                        <Button text="0.5x" styleClass="speed-item" onAction="#setSpeed05"/>
+                        <Button text="1.0x (Chuẩn)" styleClass="speed-item" onAction="#setSpeed10"/>
+                        <Button text="1.25x" styleClass="speed-item" onAction="#setSpeed125"/>
+                        <Button text="1.5x" styleClass="speed-item" onAction="#setSpeed15"/>
+                        <Button text="2.0x" styleClass="speed-item" onAction="#setSpeed20"/>
+                    </VBox>
+
+                </StackPane>
+            </VBox>
+        </top>
+
+        <center>
+            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox spacing="20" style="-fx-padding: 15 20 20 20;">
+                    <VBox spacing="8">
+                        <Label fx:id="lblTitle" text="Đang tải..." styleClass="movie-title-large" wrapText="true"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="FULL HD" styleClass="tag-quality"/>
+                            <Label fx:id="lblYear" text="2024" styleClass="text-meta"/>
+                            <Label text="|" styleClass="text-meta"/>
+                            <Label fx:id="lblCountry" text="Quốc gia" styleClass="text-meta"/>
+                            <Label text="|" styleClass="text-meta"/>
+                            <Label fx:id="lblTime" text="0 phút" styleClass="text-meta"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="10">
+                        <Label text="DANH SÁCH TẬP" styleClass="section-label"/>
+                        <ScrollPane vbarPolicy="NEVER" hbarPolicy="AS_NEEDED" pannable="true" fitToHeight="true" style="-fx-background: transparent;">
+                            <HBox fx:id="episodeContainer" spacing="10" style="-fx-padding: 0 0 5 0;"/>
+                        </ScrollPane>
+                    </VBox>
+
+                    <VBox styleClass="glass-pane">
+                        <Label text="NỘI DUNG" styleClass="section-label" style="-fx-padding: 0 0 5 0;"/>
+                        <Label fx:id="lblDesc" text="..." wrapText="true" styleClass="text-desc"/>
+                    </VBox>
+
+                    <VBox spacing="10">
+                        <Label text="KHÁM PHÁ THÊM" styleClass="section-label"/>
+                        <ScrollPane vbarPolicy="NEVER" hbarPolicy="AS_NEEDED" pannable="true" fitToHeight="true" style="-fx-background: transparent;">
+                            <HBox fx:id="bottomPosterContainer" spacing="15"/>
+                        </ScrollPane>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>
