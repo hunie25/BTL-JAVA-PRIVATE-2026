@@ -29,7 +29,7 @@ Dự án tập trung vào việc áp dụng các thư viện Java hiện đại 
     - Tận dụng cơ chế Java Reflection để tự động hóa việc ánh xạ dữ liệu, giảm thiểu sai sót thủ công.
       
 - Persistence & Session Management:
-  - SQLite & JDBC: Hệ quản trị cơ sở dữ liệu nhẹ được sử dụng để lưu trữ dữ liệu cục bộ. Lưu trữ lịch sử xem và danh sách yêu thích trực tiếp trên máy người dùng để truy xuất tức thì (Zero-latency).
+  - JDBC: Lưu thông tin người dùng và danh sách những phim đã xem vào database
   - Singleton Pattern: Áp dụng cho DatabaseConnection và SessionManager để quản lý tập trung phiên làm việc của người dùng và các kết nối cơ sở dữ liệu nặng.
 
 - Concurrency (Xử lý đa luồng):
