@@ -58,34 +58,117 @@
                         </VBox>
                     </StackPane>
 
-                    <VBox spacing="20" style="-fx-padding: 0 0 100 20;">
+                    <VBox spacing="22" style="-fx-padding: 0 20 220 20;">
+
+                        <!-- PHIM MỚI (giữ lbSectionTitle + newMoviesContainer để code cũ vẫn chạy) -->
                         <VBox spacing="10">
-                            <HBox alignment="CENTER_LEFT" spacing="0">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Region styleClass="section-bar"/>
                                 <Label fx:id="lbSectionTitle" text="PHIM MỚI CẬP NHẬT" styleClass="section-title"/>
                             </HBox>
-                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;" fitToHeight="true">
+
+                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                        style="-fx-background-color: transparent;" fitToHeight="true">
                                 <HBox fx:id="newMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
                             </ScrollPane>
                         </VBox>
 
+                        <!-- PHIM BỘ HOT -->
                         <VBox spacing="10">
-                            <VBox.margin><Insets top="20.0" /></VBox.margin>
-                            <HBox alignment="CENTER_LEFT" spacing="0">
-                                <Label text="PHIM BỘ MỚI" styleClass="section-title"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Region styleClass="section-bar"/>
+                                <Label text="Phim bộ hot" styleClass="section-title"/>
                             </HBox>
-                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;" fitToHeight="true">
-                                <HBox fx:id="seriesMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
+
+                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                        style="-fx-background-color: transparent;" fitToHeight="true">
+                                <HBox fx:id="seriesHotContainer" spacing="15" style="-fx-padding: 5;"/>
                             </ScrollPane>
                         </VBox>
 
+                        <!-- PHIM LẺ MỚI -->
                         <VBox spacing="10">
-                            <VBox.margin><Insets top="20.0" /></VBox.margin>
-                            <HBox alignment="CENTER_LEFT" spacing="0">
-                                <Label text="PHIM LẺ MỚI" styleClass="section-title"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Region styleClass="section-bar"/>
+                                <Label text="Phim lẻ mới" styleClass="section-title"/>
                             </HBox>
-                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;" fitToHeight="true">
-                                <HBox fx:id="singleMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
+
+                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                        style="-fx-background-color: transparent;" fitToHeight="true">
+                                <HBox fx:id="singleNewContainer" spacing="15" style="-fx-padding: 5;"/>
                             </ScrollPane>
+                        </VBox>
+
+                        <!-- HOẠT HÌNH ĐẶC SẮC -->
+                        <VBox spacing="10">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Region styleClass="section-bar"/>
+                                <Label text="Hoạt hình đặc sắc" styleClass="section-title"/>
+                            </HBox>
+
+                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                        style="-fx-background-color: transparent;" fitToHeight="true">
+                                <HBox fx:id="animeFeaturedContainer" spacing="15" style="-fx-padding: 5;"/>
+                            </ScrollPane>
+                        </VBox>
+
+                        <!-- FOOTER giống ảnh -->
+                        <VBox styleClass="footer-root" spacing="18" style="-fx-padding: 28 0 0 0;">
+
+                            <!-- icon row -->
+                            <HBox spacing="18" alignment="CENTER_LEFT">
+                                <Button styleClass="footer-icon-btn">
+                                    <graphic>
+                                        <!-- GitHub icon -->
+                                        <SVGPath styleClass="footer-icon"
+                                                 content="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.71.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.39-3.37-1.39-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.07 1.53 1.07.9 1.57 2.36 1.12 2.93.85.09-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.1 0-1.13.39-2.06 1.03-2.79-.1-.26-.45-1.32.1-2.75 0 0 .84-.28 2.75 1.06.8-.23 1.65-.35 2.5-.35.85 0 1.7.12 2.5.35 1.9-1.34 2.74-1.06 2.74-1.06.56 1.43.21 2.49.11 2.75.64.73 1.03 1.66 1.03 2.79 0 3.97-2.35 4.84-4.58 5.1.36.32.69.96.69 1.93 0 1.39-.01 2.51-.01 2.85 0 .26.18.58.69.48C19.14 20.6 22 16.78 22 12.26 22 6.58 17.52 2 12 2z"/>
+                                    </graphic>
+                                </Button>
+
+                                <Button styleClass="footer-icon-btn">
+                                    <graphic>
+                                        <!-- Twitter-like icon -->
+                                        <SVGPath styleClass="footer-icon"
+                                                 content="M22 5.9c-.8.4-1.6.6-2.5.8.9-.5 1.5-1.3 1.8-2.3-.8.5-1.8.9-2.8 1.1C15.7 4.7 14.6 4 13.3 4c-2.4 0-4.1 2.3-3.6 4.6-3.3-.2-6.2-1.8-8.2-4.3-1 1.8-.5 4.1 1.2 5.3-.7 0-1.4-.2-2-.6 0 2 1.4 3.8 3.4 4.2-.6.2-1.3.2-2 .1.6 1.8 2.3 3.1 4.3 3.1C4.6 17.8 2.8 18.4 1 18.2c2 1.3 4.4 2.1 6.9 2.1 8.4 0 13.1-7.2 12.8-13.7.9-.6 1.6-1.3 2.2-2.2z"/>
+                                    </graphic>
+                                </Button>
+
+                                <Button styleClass="footer-icon-btn">
+                                    <graphic>
+                                        <!-- Mail icon -->
+                                        <SVGPath styleClass="footer-icon"
+                                                 content="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+                                    </graphic>
+                                </Button>
+                            </HBox>
+
+                            <!-- link columns -->
+                            <HBox spacing="70" alignment="TOP_LEFT">
+                                <VBox spacing="14">
+                                    <Label text="Mô tả âm thanh" styleClass="footer-link"/>
+                                    <Label text="Quan hệ với nhà đầu tư" styleClass="footer-link"/>
+                                    <Label text="Thông báo pháp lý" styleClass="footer-link"/>
+                                    <Label text="Thẻ quà tặng" styleClass="footer-link"/>
+                                    <Label text="Điều khoản sử dụng" styleClass="footer-link"/>
+                                    <Label text="Thông tin doanh nghiệp" styleClass="footer-link"/>
+                                </VBox>
+
+                                <VBox spacing="14">
+                                    <Label text="Trung tâm trợ giúp" styleClass="footer-link"/>
+                                    <Label text="Việc làm" styleClass="footer-link"/>
+                                    <Label text="Tuỳ chọn cookie" styleClass="footer-link"/>
+                                    <Label text="Trung tâm truyền thông" styleClass="footer-link"/>
+                                    <Label text="Quyền riêng tư" styleClass="footer-link"/>
+                                    <Label text="Liên hệ với chúng tôi" styleClass="footer-link"/>
+                                </VBox>
+                            </HBox>
+
+                            <Region styleClass="footer-divider"/>
+
+                            <VBox spacing="10" alignment="CENTER">
+                                <Label text="© 2026 HUB FILMS. CINEMATIC EXCELLENCE." styleClass="footer-copy"/>
+                                <Label text="CRAFTED WITH ♥ BY HUB TEAM" styleClass="footer-tagline"/>
+                            </VBox>
                         </VBox>
                     </VBox>
                 </VBox>
@@ -121,7 +204,7 @@
                     <Button text="Trang chủ" styleClass="nav-btn, nav-btn-active">
                         <graphic><SVGPath content="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" styleClass="nav-icon-active"/></graphic>
                     </Button>
-                    <Button text="Khám phá" styleClass="nav-btn">
+                    <Button text="Khám phá" styleClass="nav-btn" onAction="#openExplore">
                         <graphic><SVGPath content="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z" styleClass="nav-icon"/></graphic>
                     </Button>
                     <Button text="Tải về" styleClass="nav-btn">
@@ -132,7 +215,37 @@
                     </Button>
                 </HBox>
             </VBox>
+            <!-- ====================== EXPLORE OVERLAY (THỂ LOẠI) ====================== -->
+            <StackPane fx:id="exploreOverlay" visible="false" managed="false" pickOnBounds="true">
+                <!-- nền mờ, bấm ra ngoài để đóng -->
+                <Region onMouseClicked="#closeExplore"
+                        style="-fx-background-color: rgba(0,0,0,0.70);" />
 
+                <!-- panel -->
+                <VBox style="-fx-background-color: rgba(0,0,0,0.92);
+                 -fx-background-radius: 22;
+                 -fx-padding: 22;
+                 -fx-pref-width: 340;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 20, 0.25, 0, 4);"
+                      StackPane.alignment="CENTER">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="THỂ LOẠI"
+                               style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: 900;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#closeExplore"
+                                style="-fx-background-color: transparent; -fx-padding: 6; -fx-cursor: hand;">
+                            <graphic>
+                                <SVGPath fill="rgba(255,255,255,0.60)"
+                                         content="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.89 18.29 9.17 12 2.89 5.71 4.3 4.29l6.29 6.3 6.3-6.3z"/>
+                            </graphic>
+                        </Button>
+                    </HBox>
+
+                    <!-- grid 2 cột để đổ danh sách thể loại -->
+                    <GridPane fx:id="exploreGrid" hgap="55" vgap="16" style="-fx-padding: 10 0 0 0;"/>
+                </VBox>
+            </StackPane>
         </StackPane>
     </StackPane>
 </StackPane>

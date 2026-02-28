@@ -32,8 +32,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+
 
 public class WatchController {
 
@@ -79,6 +86,14 @@ public class WatchController {
     private Label lblTitle, lblYear, lblCountry, lblTime, lblDesc;
     @FXML
     private HBox episodeContainer, bottomPosterContainer;
+
+    @FXML
+    public void initialize() {
+        hookAutoCleanupWhenLeaveScene();
+    }
+
+    private boolean cleanupHooked = false;
+    private boolean cleanedUp = false;
 
     private MediaPlayer mediaPlayer;
     private WebEngine webEngine;
@@ -648,22 +663,36 @@ public class WatchController {
     }
 
     private void cleanup() {
-        persistProgress(true);
-        stopProgressSaver();
-        try {
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.dispose();
-                mediaPlayer = null;
-            }
-        } catch (Exception ignored) {
-        }
+        if (cleanedUp) return;
+        cleanedUp = true;
 
         try {
-            if (webEngine != null) {
-                webEngine.load(null);
-            }
-        } catch (Exception ignored) {
+            // Nếu bạn có Timeline / progressSaver / hideControlsTimer thì stop ở đây (nếu có)
+            // ví dụ:
+            // stopProgressSaver();
+
+            // Stop WebView
+            try {
+                if (webEngine != null) webEngine.load("about:blank");
+            } catch (Exception ignored) {}
+
+            // Stop MediaPlayer
+            try {
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose(); // QUAN TRỌNG: giải phóng để không chạy ngầm
+                }
+            } catch (Exception ignored) {}
+
+            // Gỡ khỏi MediaView để tránh giữ tham chiếu
+            try {
+                if (mediaView != null) mediaView.setMediaPlayer(null);
+            } catch (Exception ignored) {}
+
+            mediaPlayer = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -831,5 +860,36 @@ public class WatchController {
                 new HistoryDAO().saveOrUpdate(user.getId(), slug, name, thumb, epIndex, fPos, fDur);
             } catch (Exception ignored) {}
         }).start();
+    }
+
+    private void hookAutoCleanupWhenLeaveScene() {
+        if (cleanupHooked) return;
+        cleanupHooked = true;
+
+        Platform.runLater(() -> {
+            // dùng một node chắc chắn có trong watch.fxml, ví dụ mediaView hoặc rootPane
+            if (mediaView == null || mediaView.getScene() == null) return;
+
+            Scene watchScene = mediaView.getScene();
+            Window w = watchScene.getWindow();
+            if (!(w instanceof Stage stage)) return;
+
+            // Khi stage đổi sang scene khác -> cleanup watch
+            stage.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (oldScene == watchScene) {
+                    cleanup();
+                }
+            });
+
+            // Nếu app đóng/ẩn window cũng cleanup
+            stage.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> cleanup());
+            stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> cleanup());
+        });
+    }
+
+    @FXML
+    private void onBack() {
+        cleanup();
+        SceneNavigator.loadHome();
     }
 }
