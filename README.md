@@ -10,7 +10,7 @@
 * [Công nghệ Backend & Auth](#-công-nghệ-backend--auth)
 * [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
 * [Tính năng nổi bật](#-tính-năng-nổi-bật)
-* [Giao diện ứng dụng](#-giao-diện-ứng-dụng)
+* [Sơ đồ ERD](#-sơ-đồ-erd)
 ---
 ## 🛠 Công nghệ sử dụng (Tech Stack):
 Dự án tập trung vào việc áp dụng các thư viện Java hiện đại để giải quyết các bài toán về mạng, dữ liệu và xử lý bất đồng bộ.
@@ -91,5 +91,5 @@ movieapp/
 - Cá nhân hóa: Lưu lịch sử xem của người dùng và cập nhật theo thời gian thực.
 - Xem phim, tua video, chỉnh tốc độ phát.
 ---
-## 📺 Giao diện ứng dụng (App Screenshots)
+## 📺 Sơ đồ ERD:
 <img width="961" height="644" alt="Image" src="https://github.com/user-attachments/assets/3ff48768-2de1-4522-85bd-134c2e07ee9b" />
