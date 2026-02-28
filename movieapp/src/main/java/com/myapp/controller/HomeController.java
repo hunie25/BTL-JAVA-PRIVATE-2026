@@ -26,35 +26,55 @@ import java.util.Map;
 
 public class HomeController {
 
-    @FXML private StackPane phoneFrame;
-    @FXML private StackPane appContent;
+    @FXML
+    private StackPane phoneFrame;
+    @FXML
+    private StackPane appContent;
 
-    @FXML private StackPane heroContainer;
-    @FXML private StackPane sliderClipPane;
-    @FXML private ImageView imgView1, imgView2;
+    @FXML
+    private StackPane heroContainer;
+    @FXML
+    private StackPane sliderClipPane;
+    @FXML
+    private ImageView imgView1, imgView2;
     private ImageView activeImageView, hiddenImageView;
 
-    @FXML private VBox heroInfoContainer;
-    @FXML private Label heroTitle, heroOriginName, heroYear;
-    @FXML private HBox heroDots;
+    @FXML
+    private VBox heroInfoContainer;
+    @FXML
+    private Label heroTitle, heroOriginName, heroYear;
+    @FXML
+    private HBox heroDots;
 
-    @FXML private HBox newMoviesContainer;
+    @FXML
+    private HBox newMoviesContainer;
 
-    @FXML private VBox loadingBox;
-    @FXML private ScrollPane mainContentScroll;
+    @FXML
+    private VBox loadingBox;
+    @FXML
+    private ScrollPane mainContentScroll;
 
-    @FXML private ScrollPane spType;
-    @FXML private HBox hbType;
-    @FXML private Label lbSectionTitle;
+    @FXML
+    private ScrollPane spType;
+    @FXML
+    private HBox hbType;
+    @FXML
+    private Label lbSectionTitle;
 
-    @FXML private HBox searchBar;
-    @FXML private TextField txtSearch;
-    @FXML private Button btnUser;
+    @FXML
+    private HBox searchBar;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private Button btnUser;
+    @FXML private HBox seriesMoviesContainer;
+    @FXML private HBox singleMoviesContainer;
 
     private final ToggleGroup typeGroup = new ToggleGroup();
     private double dragStartX;
 
-    private record TypeItem(String title, String listSlug) {}
+    private record TypeItem(String title, String listSlug) {
+    }
 
     private final List<TypeItem> typeItems = List.of(
             new TypeItem("Phim Mới", "phim-moi"),
@@ -100,6 +120,9 @@ public class HomeController {
     public void initialize() {
         searchScheduler = new PauseTransition(Duration.millis(500));
         searchScheduler.setOnFinished(event -> performSearch());
+
+        loadCategoryToContainer("phim-bo", seriesMoviesContainer);
+        loadCategoryToContainer("phim-le", singleMoviesContainer);
 
         if (appContent != null) {
             Rectangle screenClip = new Rectangle();
@@ -160,12 +183,14 @@ public class HomeController {
                 try {
                     List<Movie> home = movieService.getHomeMovies();
                     if (home != null && !home.isEmpty()) return home;
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 try {
                     List<Movie> list = movieService.getMoviesByList("phim-moi", 1);
                     if (list != null && !list.isEmpty()) return list;
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 return new ArrayList<>();
             }
@@ -529,12 +554,14 @@ public class HomeController {
         try {
             String poster = movie.getFullPosterUrl();
             if (poster != null && !poster.isBlank()) return poster;
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             String thumb = movie.getFullThumbUrl();
             if (thumb != null && !thumb.isBlank()) return thumb;
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return "";
     }
@@ -572,18 +599,21 @@ public class HomeController {
                                 return imgs.posters.get(0);
                             }
                         }
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 try {
                     String poster = movie.getFullPosterUrl();
                     if (poster != null && !poster.isBlank()) return poster;
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 try {
                     String thumb = movie.getFullThumbUrl();
                     if (thumb != null && !thumb.isBlank()) return thumb;
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 return "";
             }
@@ -750,12 +780,14 @@ public class HomeController {
         try {
             String thumb = movie.getFullThumbUrl();
             if (thumb != null && !thumb.isBlank()) urls.add(thumb);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             String poster = movie.getFullPosterUrl();
             if (poster != null && !poster.isBlank() && !urls.contains(poster)) urls.add(poster);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return urls;
     }
@@ -791,7 +823,8 @@ public class HomeController {
                             return images.backdrops.get(0);
                         }
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 return "";
             }
         };
@@ -1066,19 +1099,44 @@ public class HomeController {
     private void goHome() {
         mainContentScroll.setVvalue(0);
     }
-        private PauseTransition searchScheduler;
 
-        @FXML
-        private void handleSearchKeyReleased() {
-            searchScheduler.playFromStart();
-        }
+    private PauseTransition searchScheduler;
 
-        private void performSearch() {
-            String keyword = txtSearch.getText().trim();
-            if (keyword.length() >= 2) {
-                System.out.println("Đang tìm kiếm: " + keyword);
+    @FXML
+    private void handleSearchKeyReleased() {
+        searchScheduler.playFromStart();
+    }
 
-                SceneNavigator.loadSearchScene(keyword);
-            }
+    private void performSearch() {
+        String keyword = txtSearch.getText().trim();
+        if (keyword.length() >= 2) {
+            System.out.println("Đang tìm kiếm: " + keyword);
+
+            SceneNavigator.loadSearchScene(keyword);
         }
     }
+
+    private void loadCategoryToContainer(String typeSlug, HBox container) {
+        Task<List<Movie>> task = new Task<>() {
+            @Override
+            protected List<Movie> call() {
+                return movieService.getMoviesByList(typeSlug, 1);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            List<Movie> movies = task.getValue();
+            if (movies != null) {
+                container.getChildren().clear();
+                int limit = Math.min(12, movies.size());
+                for (int i = 0; i < limit; i++) {
+                    container.getChildren().add(createMovieCard(movies.get(i)));
+                }
+            }
+        });
+
+        Thread t = new Thread(task, "loader-" + typeSlug);
+        t.setDaemon(true);
+        t.start();
+    }
+}

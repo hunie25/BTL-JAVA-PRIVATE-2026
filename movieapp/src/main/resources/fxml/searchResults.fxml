@@ -37,7 +37,7 @@
                 <content>
                     <FlowPane fx:id="resultContainer" hgap="15" vgap="20"
                               style="-fx-padding: 10 20 100 20;"
-                              alignment="TOP_LEFT">
+                              alignment="TOP_CENTER">
                     </FlowPane>
                 </content>
             </ScrollPane>

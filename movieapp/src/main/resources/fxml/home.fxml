@@ -6,6 +6,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.myapp.controller.HomeController"
            stylesheets="@../css/app.css"
@@ -68,9 +69,22 @@
                         </VBox>
 
                         <VBox spacing="10">
-                            <Label text="GỢI Ý CHO BẠN" styleClass="section-title"/>
+                            <VBox.margin><Insets top="20.0" /></VBox.margin>
+                            <HBox alignment="CENTER_LEFT" spacing="0">
+                                <Label text="PHIM BỘ MỚI" styleClass="section-title"/>
+                            </HBox>
                             <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;" fitToHeight="true">
-                                <HBox fx:id="recMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
+                                <HBox fx:id="seriesMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
+                            </ScrollPane>
+                        </VBox>
+
+                        <VBox spacing="10">
+                            <VBox.margin><Insets top="20.0" /></VBox.margin>
+                            <HBox alignment="CENTER_LEFT" spacing="0">
+                                <Label text="PHIM LẺ MỚI" styleClass="section-title"/>
+                            </HBox>
+                            <ScrollPane vbarPolicy="NEVER" hbarPolicy="NEVER" style="-fx-background-color: transparent;" fitToHeight="true">
+                                <HBox fx:id="singleMoviesContainer" spacing="15" style="-fx-padding: 5;"/>
                             </ScrollPane>
                         </VBox>
                     </VBox>
